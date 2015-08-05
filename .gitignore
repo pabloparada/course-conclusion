@@ -21,4 +21,6 @@ $RECYCLE.BIN/
 # Project specific files
 */target/*
 */.idea/*
+*.jar
+*.class
 *.iml
