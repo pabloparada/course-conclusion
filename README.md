@@ -1,2 +1,2 @@
 # course-conclusion
-Undergraduate project and papers about functional data structures implemented in Java 8.
+Undergraduate project and papers about functional structures (monads, functors and arrows) implemented in Java 8.
