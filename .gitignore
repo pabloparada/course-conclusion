@@ -26,5 +26,10 @@ $RECYCLE.BIN/
 *.iml
 
 # Ignore everything except .bib and .tex
-!paper/*.bib
-!paper/*.tex
+paper/*.pdf
+paper/*.bbl
+paper/*.blg
+paper/*.aux
+paper/*.log
+paper/*.synctex.gz
+paper/*.gz
