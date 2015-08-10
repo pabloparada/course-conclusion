@@ -1,0 +1,75 @@
+\documentclass[10pt, conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{lipsum}
+\usepackage[portuguese]{babel}
+
+\begin{document}
+
+\title { 
+	Category Theory \\
+	Arrows e Monads \\
+	em Java 
+}
+
+\author {
+
+	\IEEEauthorblockN { Mozart L. Siqueira }
+	\IEEEauthorblockA { 
+		Ciências da Computação \\
+		Centro Universitário La Salle – Unilasalle \\
+		Canoas - RS - 92410-650 \\
+		Email: mozarts@unilasalle.edu.br
+	}
+
+	\and	
+	
+	\IEEEauthorblockN { Pablo M. Parada }
+	\IEEEauthorblockA { 
+		Ciências da Computação \\
+		Centro Universitário La Salle – Unilasalle \\
+		Canoas - RS - 92410-650 \\
+		Email: pablo.paradabol@gmail.com
+	}
+}
+					  
+\maketitle
+
+\begin{abstract}
+
+This is an abstract for a paper to show how to use latex for IEEE paper typeset. Springer provides templates for LaTeX users that help structure the manuscript, e.g., define the heading hierarchy. Predefined style formats are available for all the necessary structures that are supposed to be part of the manuscript, and these formats can be quickly accessed via hotkeys or special toolbars.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+
+Broad band networks, quality of service, WDM. 
+
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+
+Here is a modified text sample for intro section using latex. This is how you refer a section in another section Section~\ref{sec:meth} ..... \cite{jsr335}
+
+\section{Methodologies}
+\label{sec:meth}
+
+This is the other section that you can use.
+
+\section{You Must Learn To Code}
+
+\begin{lstlisting}[frame=single]
+
+for i:=maxint to 0 do
+   begin
+   { do nothing }
+end;
+
+\end{lstlisting}
+
+\bibliographystyle{IEEEtran}  
+\bibliography{bibliography}
+
+\end{document}
