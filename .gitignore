@@ -24,3 +24,7 @@ $RECYCLE.BIN/
 *.jar
 *.class
 *.iml
+
+# Ignore everything except .bib and .tex
+!*/paper/*.bib
+!*/paper/*.tex
