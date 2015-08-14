@@ -5,6 +5,7 @@
 \usepackage{lipsum}
 \usepackage[T1]{fontenc}
 \usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
 
 \begin{document}
 
@@ -18,8 +19,8 @@
 
 	\IEEEauthorblockN{ Mozart L. Siqueira }
 	\IEEEauthorblockA{
-		Ci\^encias da Computa\c{c}\~ao \\
-		Centro Universit\'ario La Salle - Unilasalle \\
+		Ciências da Computação \\
+		Centro Universitário La Salle - Unilasalle \\
 		Email: mozarts@unilasalle.edu.br
 	}
 
@@ -27,8 +28,8 @@
 	
 	\IEEEauthorblockN { Pablo M. Parada }
 	\IEEEauthorblockA { 
-		Ci\^encias da Computa\c{c}\~ao \\
-		Centro Universit\'ario La Salle - Unilasalle \\
+		Ciências da Computação \\
+		Centro Universitário La Salle - Unilasalle \\
 		Email: pablo.paradabol@gmail.com
 	}
 }
@@ -47,19 +48,18 @@
 
 \end{IEEEkeywords}
 
-\section{INTRODU\c{C}\~AO}
+\section{INTRODUÇÃO}
 \label{sec:intro}
 
 <escrever>
 
 \section{SOBRE O PARADIGMA FUNCIONAL}
+\label{sec:func-para}
+Influenciado principalmente pelo desenvolvimento do \textit{lambuda calculus} \cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da idéia de expressar computações através de funções combinadas em expressões. Neste, funções expressam o que deverá ser computado, ao invés de como sera computado \cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (ou \textit{building blocks}) são combinadas dando origem a novas funções que descrevem computações mais complexas.
 
+\textit{Building blocks} não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos indesejados (ou \textit{side-effects}). Também destaca-se o princípio de imutabilidade, onde o valor é de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente.
 
-O paradigma funcional surge da id\'eia de expressar computa\c{c}\~oes atrav\'es de fun\c{c}\~oes combinadas em express\~oes. Assim, fun\c{c}\~oes expressam o que dever\'a ser computado, ao inv\'es de como sera computado \cite{louden2011programming}. Programas s\~ao constru\'idos atrav\'es da composi\c{c}\~ao, tal que fun\c{c}\~oes triviais (ou \textit{building blocks}) s\~ao combinadas dando origem a novas fun\c{c}\~oes que descrevem computa\c{c}\~oes mais complexas.
-
-\textit{Building blocks} n\~ao devem fazer uso de vari\'aveis que dependam de estado, isso significa que a computa\c{c}\~ao deve ser pura e sem efeitos indesejados (ou \textit{side-effects}). Tamb\'em destaca-se o princ\'ipio de imutabilidade, onde o valor \'e de uma vari\'avel \'e determinado em sua cria\c{c}\~ao, n\~ao permitindo novas atribui\c{c}\~oes posteriormente.
-
-\'E poss\'ivel afirmar que ao expressar um programa em uma linguagem funcional obtemos uma maneira concisa de solucionar problemas, dado que este constitui-se de opera\c{c}\~oes e objetos at\^omicos e regras gerais para sua composi\c{c}\~ao \cite{michaelson2011introduction}.
+É possível afirmar que ao expressar um programa em uma linguagem funcional, obtem-se uma maneira concisa de solucionar problemas, dado que este constitui-se de operações e objetos atômicos e regras gerais para sua composição \cite{michaelson2011introduction}. Estas qualidades são apreciadas nos tempos atuais, onde há necessidade de tratar os problemas oriundos do não-determinismo. Assim, o paradigma funcional mostra-se capaz, inclusive de influenciar outras linguagens como \textit{Java}. \cite{jsr335}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
