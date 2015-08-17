@@ -6,6 +6,29 @@
 \usepackage[T1]{fontenc}
 \usepackage[portuguese]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[svgnames]{xcolor}
+\usepackage{textcomp}
+
+% configs listings
+\lstset{
+	basicstyle = \footnotesize\tt,
+	breakatwhitespace = true,
+	breaklines = true,
+	captionpos = b,
+	extendedchars = true,
+	language = Java,
+	frame = single,
+	keywordstyle = \bf,
+	showspaces = false,
+	showstringspaces = false,
+	showtabs = false,
+	tabsize = 2,
+	belowcaptionskip = 1em,
+    belowskip = 1em,
+    xleftmargin = 5pt,
+	xrightmargin = 5pt
+}
 
 \begin{document}
 
@@ -61,10 +84,38 @@ Influenciado principalmente pelo desenvolvimento do \textit{lambuda calculus} \c
 
 É possível afirmar que ao expressar um programa em uma linguagem funcional, obtem-se uma maneira concisa de solucionar problemas, dado que este constitui-se de operações e objetos atômicos e regras gerais para sua composição \cite{michaelson2011introduction}. Estas qualidades são apreciadas nos tempos atuais, onde há necessidade de tratar os problemas oriundos do não-determinismo. Assim, o paradigma funcional mostra-se capaz, inclusive de influenciar outras linguagens como \textit{Java} \cite{jsr335}.
 
-\subsection{Anonymous Inner Classes e Lambda Expressions}
-A cada release cycle, Java incrementa seu ambiente de desenvolvimento fornecendo novos recursos para seus desenvolvedores. Em sua oitava distribuição, a linguagem adicionou as funcionalidades necessárias para habilitar o uso de funções de primeira classe (ou \textit{lambda expressions}). 
+\subsection{Lambda Expressions e Anonymous Inner Classes}
+Ao fornecer funções de primeira classe (também lambda expressions ou closures), a linguagem Java habilita a substituição de annonymous inner classes (AIC) por lambda expressions. Contudo, apesar destas serem transparentes a nível de código, ambas funcionalidades possuem diferentes implementações sob a Máquina Virtual Java (JVM).
 
-AICs fornecem instruções básicas para a criação de representações concretas de interfaces e classes abstratas. Quando instanciadas, devem conter a implementação definida pelo contrato de sua interface. Estas podem também referenciar o objeto corrente utilizando a palavra reservada \textit{this}, possibilitando a invocação de métodos e a mutação de variáveis.
+AIC são compiladas pela JVM, dando origem a um novo arquivo contendo sua declaração. Além do mais, ao utilizarmos a palavra reservada \textit{this} estamos referenciando a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo \textit{class loader} e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto \textit{heap} para alocação de objetos, quanto \emph{permgem}, utilizada para guardar metadados, definições de classes e métodos \cite{hunt2011java}.
+
+Após a declaração do array de inteiros,
+
+\begin{lstlisting}[caption={Array de Inteiros}]
+Integer[] integers = new Integer[]{1, 2, 3, 4, 5};
+\end{lstlisting}
+
+é possível ordena-lo utilizando o método \textit{sort} da classe \textit{Arrays}.
+
+\begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
+Arrays.sort(integers, new Comparator<Integer>() {
+    public int compare(Integer a, Integer b) {
+        return a.compareTo(b);
+    }
+});
+\end{lstlisting}
+
+Este recebe como primeiro argumento o array que deseja-se ordernar e como segundo, uma AIC da interface \textit{Comparator} implementando o método \textit{compare}.
+
+Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução \textit{invokedynamic} \cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textit{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância. Por fim, closures fornecem formas mais expressivas de representar comportamentos.
+
+Assim, o mesmo código listado em \ref{lst:array-aic-sort} pode ser transformado em
+
+\begin{lstlisting}[caption={Lambda Expressions}]
+Arrays.sort(integers, (a, b) -> a.compareTo(b));
+\end{lstlisting}
+
+uma lambda que descreve a mesma expressão sem os encargos impostos por AIC.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
