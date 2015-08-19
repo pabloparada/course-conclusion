@@ -61,13 +61,13 @@
 
 \begin{abstract}
 
-<escrever>
+\textcolor{red}{<escrever>}
 
 \end{abstract}
 
 \begin{IEEEkeywords}
 
-<escrever>
+\textcolor{red}{<escrever>}
 
 \end{IEEEkeywords}
 
@@ -78,16 +78,16 @@
 
 \section{SOBRE O PARADIGMA FUNCIONAL}
 \label{sec:func-para}
-Influenciado principalmente pelo desenvolvimento do \textit{lambuda calculus} \cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da idéia de expressar computações através de funções combinadas em expressões. Neste, funções expressam o que deverá ser computado, ao invés de como sera computado \cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (ou \textit{building blocks}) são combinadas dando origem a novas funções que descrevem computações mais complexas.
+Influenciado principalmente pelo desenvolvimento do lambuda calculus \cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da idéia de expressar computações através de funções combinadas em expressões. Neste, funções expressam o que deverá ser computado, ao invés de como sera computado \cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (ou building blocks) são combinadas dando origem a novas funções que descrevem computações mais complexas.
 
-\textit{Building blocks} não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos indesejados (ou \textit{side-effects}). Também destaca-se o princípio de imutabilidade, onde o valor é de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente.
+Building blocks não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos indesejados (ou side-effects). Também destaca-se o princípio de imutabilidade, onde o valor é de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente.
 
-É possível afirmar que ao expressar um programa em uma linguagem funcional, obtem-se uma maneira concisa de solucionar problemas, dado que este constitui-se de operações e objetos atômicos e regras gerais para sua composição \cite{michaelson2011introduction}. Estas qualidades são apreciadas nos tempos atuais, onde há necessidade de tratar os problemas oriundos do não-determinismo. Assim, o paradigma funcional mostra-se capaz, inclusive de influenciar outras linguagens como \textit{Java} \cite{jsr335}.
+É possível afirmar que ao expressar um programa em uma linguagem funcional, obtem-se uma maneira concisa de solucionar problemas, dado que este constitui-se de operações e objetos atômicos e regras gerais para sua composição \cite{michaelson2011introduction}. Estas qualidades são apreciadas nos tempos atuais, onde há necessidade de tratar os problemas oriundos do não-determinismo. Assim, o paradigma funcional mostra-se capaz, inclusive de influenciar outras linguagens como Java \cite{jsr335}.
 
 \subsection{Lambda Expressions e Anonymous Inner Classes}
 Ao fornecer funções de primeira classe (também lambda expressions ou closures), a linguagem Java habilita a substituição de annonymous inner classes (AIC) por lambda expressions. Contudo, apesar destas serem transparentes a nível de código, ambas funcionalidades possuem diferentes implementações sob a Máquina Virtual Java (JVM).
 
-AIC são compiladas pela JVM, dando origem a um novo arquivo contendo sua declaração. Além do mais, ao utilizarmos a palavra reservada \textit{this} estamos referenciando a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo \textit{class loader} e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto \textit{heap} para alocação de objetos, quanto \emph{permgem}, utilizada para guardar metadados, definições de classes e métodos \cite{hunt2011java}.
+AIC são compiladas pela JVM, dando origem a novos arquivos contendo suas declarações. Além do mais, ao utilizarmos a palavra reservada \textbf{this} estamos referenciando a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo class loader e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto heap para alocação de objetos quanto permgem, utilizada para guardar metadados, definições de classes e métodos \cite{hunt2011java}.
 
 Após a declaração do array de inteiros,
 
@@ -95,7 +95,7 @@ Após a declaração do array de inteiros,
 Integer[] integers = new Integer[]{1, 2, 3, 4, 5};
 \end{lstlisting}
 
-é possível ordena-lo utilizando o método \textit{sort} da classe \textit{Arrays}.
+é possível ordena-lo utilizando o método sort da classe Arrays.
 
 \begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
 Arrays.sort(integers, new Comparator<Integer>() {
@@ -105,9 +105,9 @@ Arrays.sort(integers, new Comparator<Integer>() {
 });
 \end{lstlisting}
 
-Este recebe como primeiro argumento o array que deseja-se ordernar e como segundo, uma AIC da interface \textit{Comparator} implementando o método \textit{compare}.
+Este recebe como primeiro argumento o array que deseja-se ordernar e como segundo, uma AIC da interface Comparator implementando o método compare.
 
-Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução \textit{invokedynamic} \cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textit{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância. Por fim, closures fornecem formas mais expressivas de representar comportamentos.
+Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic \cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância. Por fim, closures fornecem formas mais expressivas de representar comportamentos.
 
 Assim, o mesmo código listado em \ref{lst:array-aic-sort} pode ser transformado em
 
@@ -116,6 +116,34 @@ Arrays.sort(integers, (a, b) -> a.compareTo(b));
 \end{lstlisting}
 
 uma lambda que descreve a mesma expressão sem os encargos impostos por AIC.
+
+\section{CATEGORY THEORY E SUAS APLICAÇÕES}
+
+Afim de demonstrar as relações entre estruras e sistemas matemáticos \cite{maclane1971mat}, a Category Theory (CT) estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência \cite{spivak2014cts}. Na computação seu emprego fornece abstrações capazes de demonstrar as estruturas de programas e como dá-se sua composição. Com base nisto, Haskell foi capaz de resolver um dos problemas do The Awkward Squad \cite{jones2001tacklingthe}, onde fundamentalmente laziness e side-effects eram incompatíveis até o surgimento de monads \cite{mogi1991monad}. A partir de então, diversas outras estruturas além de monads foram implementadas em Haskell.
+
+\subsection{Category -- Objetos e Morfismos}
+
+Uma category $C$ consiste em uma coleção de objetos e uma coleção de relações entre estes objetos, chamados morfismos.\\
+
+\textcolor{red}{<adicionar notações matemáticas e diagramas>}
+
+\subsection{Functor -- Categories e Morfismos}
+
+Um functor $F$ consiste em um morfismo entre duas categories \cite{maclane1971mat}. Estes morfismos, chamados homomorfismos, tem como característica a preservação de estrutura de $F$. Assim como categories, functors devem satisfazer os axiomas de associatividade e identidade.\\
+
+\textcolor{red}{<adicionar notações matemáticas e diagramas>}
+
+\subsection{Monad -- Endofunctor e Transformações Naturais}
+
+Endofunctors equipados com as natural transformations unit e multiplication \cite{maclane1971mat} são chamados de monad. Define-se endofunctors como functors cujos morfismos dão-se em uma mesma category. Além disso, natural transformations são morfismos entre functors, tendo como principal característica a preservação de estrutura. Como todas as estruturas já mencionadas, monads também devem satisfazer as propriedades de associatividade e identidade.\\
+
+\textcolor{red}{<adicionar notações matemáticas e diagramas comutativos>}
+
+\subsection{Arrow -- Kleisli Triples}
+
+A partir de um monad podemos construir kleisli triples. Podemos pensar em kleisli triples como uma outra forma de representar sintaticamente um monad. Similar a monads, estas também obedecem as propriedades de associatividade e comutatividade.\\
+
+\textcolor{red}{<adicionar notações matemáticas e diagramas comutativos>}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
