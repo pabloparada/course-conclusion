@@ -33,3 +33,4 @@ paper/*.aux
 paper/*.log
 paper/*.synctex.gz
 paper/*.gz
+paper/*.dvi

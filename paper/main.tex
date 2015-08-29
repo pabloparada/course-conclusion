@@ -1,6 +1,6 @@
 \documentclass[10pt, conference]{IEEEtran}
 
-\usepackage{cite}
+\usepackage[numbers,sort&compress,square]{natbib}
 \usepackage{listings}
 \usepackage{lipsum}
 \usepackage[T1]{fontenc}
@@ -9,8 +9,8 @@
 \usepackage{listings}
 \usepackage[svgnames]{xcolor}
 \usepackage{textcomp}
+\usepackage{enumitem}
 \usepackage{tikz}
-
 \usetikzlibrary{matrix}
 
 % configs listings
@@ -36,7 +36,11 @@
 	xrightmargin = 5pt
 }
 
+% configs footnotes
+\renewcommand\footnoterule{\kern-3pt \hrule width 2in \kern 2.6pt}
+
 \begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
 
 \title { 
 	Category Theory \\
@@ -64,6 +68,9 @@
 }
 					  
 \maketitle
+
+\thispagestyle{plain}
+\pagestyle{plain}
 
 \begin{abstract}
 
@@ -114,8 +121,7 @@ Conforme afirmou-se anteriormente, AIC e closures de fato diferem sob a JVM. AIC
 Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic \cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância. Por fim, closures fornecem formas mais expressivas de representar comportamentos.
 
 \section{CATEGORY THEORY E SUAS APLICAÇÕES}
-
-Afim de demonstrar as relações entre estruturas e sistemas matemáticos \cite{maclane1971mat}, a Category Theory (CT) estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência \cite{spivak2014cts}. Tal como Group Theory\footnote{A Group Theory estuda as estruturas algébricas chamadas group. Um group é um conjunto de elementos finito ou infinito associado a uma operação binária \cite{spivak2014cts}, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a CT manifesta-se como um sistema de funções entre conjuntos de objetos \cite{awodey2010category}.
+A Category Theory (CT) foi inventada no início dos anos 40 por Samuel Eilenberg e Sunders Mac Lane \cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e algebra \cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos \cite{maclane1971mat}, a CT estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como Group Theory\footnote{A Group Theory estuda as estruturas algébricas chamadas Group. Um Group é um conjunto de elementos finito ou infinito associado a uma operação binária \cite{spivak2014cts}, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a CT manifesta-se como um sistema de funções entre conjuntos de objetos \cite{awodey2010category}.
 
 \begin{figure}[h]
 \centering
@@ -132,21 +138,26 @@ Afim de demonstrar as relações entre estruturas e sistemas matemáticos \cite{
     	\path[->]
         	(m-1-1) edge node[above] {$f$} (m-1-2)
 			(m-1-2) edge node[right] {$g$} (m-2-2)
-			(m-1-1) edge node[left = 0.3cm, below = 0.001cm] {$g \circ f$} (m-2-2);
+			(m-1-1) edge node[left = 0.9cm, below = 0.001cm] {$h =$ $g \circ f$} (m-2-2);
 	\end{tikzpicture}
-\caption{Composição das funções $f$ e $g$}
+\caption{Sitema de funções e coleções de objetos}
 \label{fig:f-g-composition}
 \end{figure}
 
-Conforme a figura~\ref{fig:f-g-composition}, o produto da composição das funções $f$ e $g$ através da propriedade de comutatividade é capaz uma nova função que opera sob os objetos $A$ e $B$.
+Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que $f: A \rightarrow B$ e $g: B \rightarrow C$. Temos também a função $h$, definida por $h: A \rightarrow C$ como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da CT.
 
-Na computação seu emprego fornece abstrações capazes de demonstrar as estruturas de programas e como dá-se sua composição. Com base nisto, Haskell foi capaz de resolver um dos problemas do The Awkward Squad \cite{jones2001tacklingthe}, onde fundamentalmente laziness e side-effects eram incompatíveis até o surgimento de monads \cite{mogi1991monad} na linguagem. A partir de então, diversas outras estruturas como categories, functors, arrows foram implementadas em Haskell.
+A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de monad em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functors, categories, arrows, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
 
 \subsection{Category -- Objetos e Morfismos}
 
-Uma category $C$ consiste em uma coleção de objetos e uma coleção de relações entre estes objetos, chamados morfismos.\\
+Conforme \cite{spivak2014cts}, uma category consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos.\\
 
-\textcolor{red}{<adicionar notações matemáticas e diagramas>}
+\textbf{Definição}: a category $C$ é definida como:
+
+\begin{enumerate}[label=(\Alph*), leftmargin=4em, topsep=0pt,itemsep=1ex,partopsep=1ex,parsep=1ex]
+  \item uma coleção $Ob(C)$, contendo os objetos de $C$;
+  \item para cada par $x, y \in Ob(C)$, um conjunto $Hom_C(x, y)$ chamado de morfismos de de $x$ para $y$;
+\end{enumerate}
 
 \subsection{Functor -- Categories e Morfismos}
 
