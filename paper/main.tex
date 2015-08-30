@@ -1,3 +1,4 @@
+
 \documentclass[10pt, conference]{IEEEtran}
 
 \usepackage[numbers,sort&compress,square]{natbib}
@@ -33,7 +34,7 @@
 	abovecaptionskip = 1em,
 	belowcaptionskip = 1em,
 	aboveskip = 2em,
-    belowskip = 2em,
+    belowskip = 5pt,
     xleftmargin = 5pt,
 	xrightmargin = 5pt
 }
@@ -93,14 +94,16 @@
 
 \section{SOBRE O PARADIGMA FUNCIONAL}
 \label{sec:func-para}
-Influenciado principalmente pelo desenvolvimento do lambda calculus \cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da ideia de expressar computações através de funções combinadas em expressões. Neste, funções determinam o que deverá ser computado, ao invés de como sera computado \cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (ou building blocks) são combinadas dando origem a novas funções que descrevem computações mais complexas.
+Influenciado principalmente pelo desenvolvimento do lambda calculus~\cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da ideia de expressar computações através de funções combinadas em expressões. Neste, funções determinam o que deverá ser computado, ao invés de como sera computado~\cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (building blocks) são combinadas dando origem a novas funções que descrevem computações mais complexas.
 
-Building blocks não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos indesejados (ou side-effects). Também destaca-se o princípio de imutabilidade, onde o valor é de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente.
+Building blocks não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos colaterais (side-effects). Também destaca-se o princípio de imutabilidade, onde o valor de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente. Ao expressar um programa em uma linguagem funcional obtém-se uma maneira concisa de solucionar problemas, sendo que este constitui-se de operações e objetos atômicos e regras gerais para sua composição~\cite{michaelson2011introduction}.
 
-É possível afirmar que ao expressar um programa em uma linguagem funcional, obtém-se uma maneira concisa de solucionar problemas, dado que este constitui-se de operações e objetos atômicos e regras gerais para sua composição \cite{michaelson2011introduction}. Estas qualidades são apreciadas nos tempos atuais, onde há necessidade de tratar os problemas oriundos do não-determinismo. Assim, o paradigma funcional mostra-se capaz, inclusive de influenciar outras linguagens como Java \cite{jsr335}.
+Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore nos fornece cada vez mais núcleos, não necessariamente núcleos mais rápidos~\cite{jsr335}. Em programas não-determinísticos, múltiplas threads podem alterar os dados representados por objetos imutáveis sem ocasionar os diversos problemas já conhecidos como dead locks e race conditions. Além do thread safety oferecido pela propriedade de imutabilidade, o conceito de funções transparentes referencialmente, ou seja, funções que não utilizam variáveis de estado, também oferecem vantagens para a concorrência com múltiplas threads podendo invocar tais funções esperando sempre o mesmo retorno, dados os mesmos argumentos.
+
+Na última década muitos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
 \subsection{Lambda Expressions e Anonymous Inner Classes}
-Ao fornecer funções de primeira classe (também lambda expressions ou closures)\footnote{Lambda expression é uma função que não exige vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Contudo, apesar destas expressarem o mesmo comportamento a nível de código, ambas funcionalidades possuem diferentes implementações sob a Máquina Virtual Java (JVM). Conforme a listagem~\ref{lst:array-aic-sort}, a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
+Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures~\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
 
 \begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
 Integer[] integers = new Integer[]{5, 4, 3, 2, 1};
@@ -112,20 +115,24 @@ Arrays.sort(integers, new Comparator<Integer>() {
 });
 \end{lstlisting}
 
-Entretanto, o mesmo método pode ser simplificado por uma lambda expression conforme demonstrado na listagem~\ref{lst:array-lambda-sort}. Nesta abordagem obtém-se o mesmo resultado sem os encargos impostos por AIC.
+Neste trecho de código o método \textit{sort} recebe como primeiro argumento um array de inteiros (já declarado na variável \textit{integers}) e como segundo qualquer instância que satisfaça o contrato de \textit{Comparator}. Assim, para satisfazer o segundo argumento, instância-se uma AIC através da palavra reservada \textbf{new} que implementa o método \textit{compare} declarado no contrato.
 
-\begin{lstlisting}[caption={Sort - Lambda Expressions}, label={lst:array-lambda-sort}]
+Entretanto, com closures o mesmo método \textit{sort} pode ter seus argumentos simplificados. Conforme demonstrado na listagem~\ref{lst:array-lambda-sort}, ao invés de instanciar uma AIC, uma lambda expression é passada como segundo argumento, removendo a necessidade de instanciação de uma classe e a implementação de um contrato imposto por \textit{Comparator}.
+
+\begin{lstlisting}[caption={Sort - Lambda Expression}, label={lst:array-lambda-sort}]
 Arrays.sort(integers, (a, b) -> a.compareTo(b));
 \end{lstlisting}
 
-Conforme afirmou-se anteriormente, AIC e closures de fato diferem sob a JVM. AIC são compiladas, ou seja, geram novos arquivos contendo declarações de classes. Além do mais, ao utilizar a palavra reservada \textbf{this} referencia-se a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo classloader e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto heap \cite{hunt2011java} para alocação de objetos quanto permgem\footnote{Área de memória limitada separada da heap chamada Permanent Generation que possui a função de armazenar objetos de geração permanente como metadados, classes e métodos.}.
+De fato, apesar de expressarem o mesmo comportamento a nível de código, ambas funcionalidades possuem diferentes implementações sob a Máquina Virtual Java (JVM). AIC são compiladas, ou seja, geram novos arquivos contendo declarações de classes. Além do mais, ao utilizar a palavra reservada \textbf{this} referencia-se a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo classloader e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto heap~\cite{hunt2011java} para alocação de objetos quanto permgem\footnote{Área de memória limitada separada da heap chamada Permanent Generation que possui a função de armazenar objetos de geração permanente como metadados, classes e métodos.}.
 
-Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic \cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância. Por fim, closures fornecem formas mais expressivas de representar comportamentos.
+Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic~\cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância.
 
-\section{CATEGORY THEORY E ESTRUTURAS}
-A Category Theory (CT) foi inventada no início dos anos 40 por Samuel Eilenberg e Sunders Mac Lane \cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e algebra \cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos \cite{maclane1971mat}, a CT estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como Group Theory\footnote{A Group Theory estuda as estruturas algébricas chamadas Group. Um Group é um conjunto de elementos finito ou infinito associado a uma operação binária \cite{spivak2014cts}, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a CT manifesta-se como um sistema de funções entre conjuntos de objetos \cite{awodey2010category}.
+Além destes benefícios, lambda expressions possibilitam a implementação de novas bibliotecas que trazem consigo as propriedades do paradigma funcional. São suficientemente poderosas para expressar as mesmas construções, sem os encargos impostos pelas antigas implementações. Além disso, a adoção do paradigma funcional torna os usuários aptos a aderirem a novas estruturas advindas da Category Theory, como a classe \textit{Optional}, disponível na última versão da linguagem.
 
-\begin{figure}[h]
+\section{CATEGORY THEORY E SUAS ESTRUTURAS}
+A Category Theory (CT) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a CT estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como Group Theory\footnote{A Group Theory estuda as estruturas algébricas chamadas Group. Um Group é um conjunto de elementos finito ou infinito associado a uma operação binária, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a CT manifesta-se como um sistema de funções entre conjuntos de objetos~\cite{awodey2010category}.
+
+\begin{figure}[!h]
 \centering
 	\begin{tikzpicture}[baseline=-0.8ex]
     	\matrix (m) [
@@ -168,7 +175,7 @@ Dado os objetos $a, b \in Ob(C)$, denota-se o morfismo $f \in Hom_C(a, b)$ por $
 Estas operações em $C$ devem satisfazer os seguintes axiomas:
 
 \begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
-	\item \textit{(Identidade)} Para todo objeto $a, b \in Ob(C)$ e todo morfismo $f: a \rightarrow b$, tem-se $f \circ id_a = f$ e $id_b \circ f = f$;
+	\item \textit{(Identidade)} Para todo objeto $a, b \in Ob(C)$ e todo morfismo $f: a \rightarrow b$, tem-se $id_a \circ f = f = id_b \circ f$;
 	\item \textit{(Associatividade)} Sejam os objetos $a, b, c, d \in Ob(C)$ e os morfismos $f: a \rightarrow b$, $g: b \rightarrow c$ e $h: c \rightarrow d$. Então $(h \circ g) \circ f = h \circ (g \circ f)$.
 \end{enumerate}
 
