@@ -10,7 +10,9 @@
 \usepackage[svgnames]{xcolor}
 \usepackage{textcomp}
 \usepackage{enumitem}
+\usepackage{subcaption}
 \usepackage{tikz}
+
 \usetikzlibrary{matrix}
 
 % configs listings
@@ -120,7 +122,7 @@ Conforme afirmou-se anteriormente, AIC e closures de fato diferem sob a JVM. AIC
 
 Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic \cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lamda expression é acessada, ao contrário de AIC que acessa sua própria instância. Por fim, closures fornecem formas mais expressivas de representar comportamentos.
 
-\section{CATEGORY THEORY E SUAS APLICAÇÕES}
+\section{CATEGORY THEORY E ESTRUTURAS}
 A Category Theory (CT) foi inventada no início dos anos 40 por Samuel Eilenberg e Sunders Mac Lane \cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e algebra \cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos \cite{maclane1971mat}, a CT estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como Group Theory\footnote{A Group Theory estuda as estruturas algébricas chamadas Group. Um Group é um conjunto de elementos finito ou infinito associado a uma operação binária \cite{spivak2014cts}, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a CT manifesta-se como um sistema de funções entre conjuntos de objetos \cite{awodey2010category}.
 
 \begin{figure}[h]
@@ -144,20 +146,83 @@ A Category Theory (CT) foi inventada no início dos anos 40 por Samuel Eilenberg
 \label{fig:f-g-composition}
 \end{figure}
 
-Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que $f: A \rightarrow B$ e $g: B \rightarrow C$. Temos também a função $h$, definida por $h: A \rightarrow C$ como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da CT.
+Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que $f: A \rightarrow B$ e $g: B \rightarrow C$. A função $h$, definida por $h: A \rightarrow C$ dá-se como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da CT.
 
 A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de monad em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functors, categories, arrows, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
 
 \subsection{Category -- Objetos e Morfismos}
 
-Conforme \cite{spivak2014cts}, uma category consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos.\\
+Uma category consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos \cite{spivak2014cts}.\\
 
-\textbf{Definição}: a category $C$ é definida como:
+\textbf{Definição}: conforme \cite{spivak2014cts, maclane1971mat}, uma category $C$ é definida como:
 
-\begin{enumerate}[label=(\Alph*), leftmargin=4em, topsep=0pt,itemsep=1ex,partopsep=1ex,parsep=1ex]
-  \item uma coleção $Ob(C)$, contendo os objetos de $C$;
-  \item para cada par $x, y \in Ob(C)$, um conjunto $Hom_C(x, y)$ chamado de morfismos de de $x$ para $y$;
+\begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
+	\item uma coleção $Ob(C)$, contendo os objetos de $C$;
+	\item para cada par $a, b \in Ob(C)$, um conjunto $Hom_C(a, b)$ chamado de morfismos de $a$ para $b$;
+	\item para cada objeto $a \in Ob(C)$, um morfismo de \textit{identidade} em $a$ denotado por $id_a \in Hom_C(x, a)$;
+	\item para cada três objetos $a, b, c \in Ob(C)$, uma função de composição $\circ: Hom_C(b, c) \times Hom_C(a, b) \rightarrow Hom_C(a, c)$;
 \end{enumerate}
+
+Dado os objetos $a, b \in Ob(C)$, denota-se o morfismo $f \in Hom_C(a, b)$ por $f: a \rightarrow b$; onde $a$ é o domínio e $b$ o contradomínio.\\
+
+Estas operações em $C$ devem satisfazer os seguintes axiomas:
+
+\begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
+	\item \textit{(Identidade)} Para todo objeto $a, b \in Ob(C)$ e todo morfismo $f: a \rightarrow b$, tem-se $f \circ id_a = f$ e $id_b \circ f = f$;
+	\item \textit{(Associatividade)} Sejam os objetos $a, b, c, d \in Ob(C)$ e os morfismos $f: a \rightarrow b$, $g: b \rightarrow c$ e $h: c \rightarrow d$. Então $(h \circ g) \circ f = h \circ (g \circ f)$.
+\end{enumerate}
+
+\bigskip
+
+Ambos axiomas podem ser representados pelos diagramas comutativos das figuras~\ref{fig:comut-ident} e \ref{fig:comut-assoc}.
+
+\begin{figure}[h]
+	\begin{minipage}[t]{.48\linewidth}
+		\centering
+			\begin{tikzpicture}[baseline=(current bounding box.north)]
+				\matrix (m) [
+							matrix of math nodes,
+							row sep=3em,
+							column sep=5em,
+							text height=2ex, text depth=0.5ex
+						]{
+							a & a \\
+							b & b \\
+						};
+
+					\path[->]
+						(m-1-1) edge node[above] {$id_a$} (m-1-2)
+						(m-1-1) edge node[left] {$f$} (m-2-1)
+						(m-1-2) edge node[above] {$f$} (m-2-1)
+						(m-1-2) edge node[right]  {$f$} (m-2-2)
+						(m-2-1) edge node[above] {$id_b$} (m-2-2);
+			\end{tikzpicture}
+			\caption{Identidade}
+			\label{fig:comut-ident}
+	\end{minipage}
+	\begin{minipage}[t]{.48\linewidth}
+		\centering
+			\begin{tikzpicture}[baseline=(current bounding box.north)]
+				\matrix (m) [
+							matrix of math nodes,
+							row sep=3em,
+							column sep=5em,
+							text height=2ex, text depth=0.5ex
+						] {
+							a & b \\
+							c & d \\
+						};
+					\path[->]
+						(m-1-1) edge node[above] {$f$} (m-1-2)
+						(m-1-1) edge node[left] {$g \circ f$} (m-2-1)
+						(m-1-2) edge node[above] {$g$} (m-2-1)
+						(m-1-2) edge node[right]  {$h \circ g$} (m-2-2)
+						(m-2-1) edge node[above] {$h$} (m-2-2);
+			\end{tikzpicture}
+			\caption{Associatividade}
+			\label{fig:comut-assoc}
+	\end{minipage}
+\end{figure}
 
 \subsection{Functor -- Categories e Morfismos}
 
