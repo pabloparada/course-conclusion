@@ -13,8 +13,9 @@
 \usepackage{enumitem}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{amsmath}
 
-\usetikzlibrary{matrix}
+\usetikzlibrary{matrix, arrows}
 
 % configs listings
 \renewcommand{\lstlistingname}{Listagem}
@@ -92,7 +93,7 @@
 
 <escrever>
 
-\section{SOBRE O PARADIGMA FUNCIONAL}
+\section{PARADIGMA FUNCIONAL E LAMBDA EXPRESSIONS}
 \label{sec:func-para}
 Influenciado principalmente pelo desenvolvimento do lambda calculus~\cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da ideia de expressar computações através de funções combinadas em expressões. Neste, funções determinam o que deverá ser computado, ao invés de como sera computado~\cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (building blocks) são combinadas dando origem a novas funções que descrevem computações mais complexas.
 
@@ -231,11 +232,61 @@ Ambos axiomas podem ser representados pelos diagramas comutativos das figuras~\r
 	\end{minipage}
 \end{figure}
 
-\subsection{Functor -- Categories e Morfismos}
+\subsection{Functor -- Morfismos entre Categories}
 
-Um functor $F$ consiste em um morfismo entre duas categories \cite{maclane1971mat}. Estes morfismos, chamados homomorfismos, tem como característica a preservação de estrutura de $F$. Assim como categories, functors devem satisfazer os axiomas de associatividade e identidade.\\
+Um functor é um mapeamento entre duas categorias de tal modo que o domínio, contradomínio, objetos e morfismos são preservados~\cite{awodey2010category}.\\
 
-\textcolor{red}{<adicionar notações matemáticas e diagramas>}
+\textbf{Definição}: para as categorias $C$ e $D$, um functor $F: C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas~\cite{maclane1971mat}. São elas:
+
+\begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
+	\item a função de objeto $F$ que atribui cada objeto $a \in Ob(C)$ para um objeto $F(a) \in Ob(D)$;
+	\item e a função de flecha (também chamada $F$) que atribui cada morfismo $f: a \rightarrow b \in C$ para um morfismo $F(f):F(a) \rightarrow F(b) \in D$.
+\end{enumerate}
+
+Tal que os seguintes axiomas são satisfeitos:
+
+\begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
+	\item \textit{(Identidade)} Para todo objeto $a \in Ob(C)$ existe um morfismo $F(id_a) = id_{F_{(a)}}$ que preserva a identidade;
+	\item \textit{(Associatividade)} Sejam os objetos $a, b, c \in Ob(C)$ e os morfismos $f: a \rightarrow b$ e $g: b \rightarrow c$. Então $F(g \circ  f) = F(g) \circ F(f)$.
+\end{enumerate}
+
+Estas funções capazes de preservar as características das categories $C$ e $D$ também podem ser ilustradas a partir da figura~\ref{fig:func-f}.
+
+\begin{figure}[h]
+			\begin{tikzpicture}[->, >= stealth', shorten >= 1pt, auto]
+				\node [above = 1cm, right = 5cm, scale=.91] (D) {$D)$};
+				\node [above = 1cm, left = 1.5cm, scale=.91] (C) {$C)$};
+				\node [left = 1cm, scale=.9] (a) {a};
+  				\node [right of = a, node distance = 1.5cm, scale=.9] (b) {b};
+  				\node [right of = b, below = .4cm, node distance = 1.4cm, scale=1.1] (F) {$F \Rightarrow$};
+ 				\node [below of = b, node distance = 1.5cm, scale=.9] (c) {c};
+  				\node [right of = a, node distance = 1.5cm, scale=.9] (b) {b};
+				\node [right of = b, node distance = 3.5cm, scale=.9] (fa) {F(a)};
+  				\node [right of = fa, node distance = 1.5cm, scale=.9] (fb) {F(b)};
+  				\node [below of = fb, node distance = 1.5cm, scale=.9] (fc) {F(c)};
+				
+				\path[->, every loop/.style={looseness=10}]
+
+					(a) edge [in = 190, out = 120, loop, left] node[scale=.75] {$id_a$} (a);
+					
+				\path[->, every loop/.style={looseness=10}]
+				
+					(fa) edge [in = 190, out = 140, loop, left] node[scale=.75] {$F(id_a)$} (fa);
+				
+				\draw[->, shorten >= 1pt] (a)-- node[above] {$f$} (b);
+				\draw[->, shorten >= 1pt] (b)-- node[right] {$g$} (c);
+				\draw[->, shorten >= 1pt] (a)-- node[left = 0.5cm, below = 0.001cm] {$g \circ f$} (c);
+				\draw[->, shorten >= 1pt] (b)-- node[right] {$g$} (c);
+				
+				\draw[->, shorten >= 1pt] (fa)-- node[above] {$f$} (fb);
+				\draw[->, shorten >= 1pt] (fa)-- node[above] {$f$} (fb);
+				\draw[->, shorten >= 1pt] (fb)-- node[right] {$g$} (fc);
+				\draw[->, shorten >= 1pt] (fa)-- node[left = 0.7cm, below = 0.001cm] {$F(g \circ f)$} (fc);
+
+			\end{tikzpicture}
+			\caption{Functor $F$}
+			\label{fig:func-f}
+\end{figure}
 
 \subsection{Monad -- Endofunctor e Transformações Naturais}
 
