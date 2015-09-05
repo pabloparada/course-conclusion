@@ -93,13 +93,15 @@
 
 <escrever>
 
-\section{PARADIGMA FUNCIONAL E LAMBDA EXPRESSIONS}
+\section{SOBRE O PARADIGMA FUNCIONAL}
 \label{sec:func-para}
 Influenciado principalmente pelo desenvolvimento do lambda calculus~\cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da ideia de expressar computações através de funções combinadas em expressões. Neste, funções determinam o que deverá ser computado, ao invés de como sera computado~\cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (building blocks) são combinadas dando origem a novas funções que descrevem computações mais complexas.
 
 Building blocks não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos colaterais (side-effects). Também destaca-se o princípio de imutabilidade, onde o valor de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente. Ao expressar um programa em uma linguagem funcional obtém-se uma maneira concisa de solucionar problemas, sendo que este constitui-se de operações e objetos atômicos e regras gerais para sua composição~\cite{michaelson2011introduction}.
 
 Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore nos fornece cada vez mais núcleos, não necessariamente núcleos mais rápidos~\cite{jsr335}. Em programas não-determinísticos, múltiplas threads podem alterar os dados representados por objetos imutáveis sem ocasionar os diversos problemas já conhecidos como dead locks e race conditions. Além do thread safety oferecido pela propriedade de imutabilidade, o conceito de funções transparentes referencialmente, ou seja, funções que não utilizam variáveis de estado, também oferecem vantagens para a concorrência com múltiplas threads podendo invocar tais funções esperando sempre o mesmo retorno, dados os mesmos argumentos.
+
+\section{JAVA LAMBDA EXPRESSIONS}
 
 Na última década muitos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
@@ -159,7 +161,7 @@ Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são repres
 A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de monad em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functors, categories, arrows, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
 
 \subsection{Category -- Objetos e Morfismos}
-
+\label{subsec:sub-cat}
 Uma category consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos \cite{spivak2014cts}.\\
 
 \textbf{Definição}: conforme \cite{spivak2014cts, maclane1971mat}, uma category $C$ é definida como:
@@ -292,15 +294,71 @@ Estas funções capazes de preservar as características das categories $C$ e $D
 
 \subsection{Monad -- Endofunctor e Transformações Naturais}
 
-Endofunctors equipados com as natural transformations unit e multiplication \cite{maclane1971mat} são chamados de monad. Define-se endofunctors como functors cujos morfismos dão-se em uma mesma category. Além disso, natural transformations são morfismos entre functors, tendo como principal característica a preservação de estrutura. Como todas as estruturas já mencionadas, monads também devem satisfazer as propriedades de associatividade e identidade.\\
+Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental chamada monad estrutura-se a partir de um endofunctor~\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais~\footnote{Mapeamento entre dois functors que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
 
-\textcolor{red}{<adicionar notações matemáticas e diagramas comutativos>}
+\textbf{Definição}: o monad $T = (T, \eta, \mu)$ em uma category $C$ consiste em:
+
+\begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
+	\item um endofunctor $T$, tal que $T: C \rightarrow C$;
+	\item nas transformações naturais:
+	\begin{enumerate}[label={}]
+		\item (\textit{Identidade}) $\eta: id_C \rightarrow T$;
+       	\item (\textit{Multiplicação}) $\mu: T^2 \rightarrow T$, onde $T^2 = T \circ T$.
+	\end{enumerate}
+\end{enumerate}
+
+Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-assoc} comutem, respeitando os axiomas de identidade e associatividade.
+
+\begin{figure}[h]
+\centering
+	\begin{tikzpicture}[baseline=-0.8ex]
+		\matrix (m) [
+					matrix of math nodes,
+					row sep=3em,
+					column sep=5em,
+					text height=2ex, text depth=0.5ex
+				]{
+					T & T^2 & T \\
+					  &  T  &   \\
+				};
+
+			\path[->]
+				(m-1-1) edge node[above] {$\eta_T$} (m-1-2)
+				(m-1-2) edge node[above] {$T_\eta$} (m-1-3)
+				(m-1-1) edge node[left = 0.2cm, below = 0.001cm] {$=$} (m-2-2)
+				(m-1-3) edge node[right = 0.2cm, below = 0.001cm] {$=$} (m-2-2)
+				(m-1-2) edge node[right] {$\mu$} (m-2-2);
+	\end{tikzpicture}
+	\caption{Identidade à esquerda e direita}
+	\label{fig:mon-comut-ident}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+	\begin{tikzpicture}[baseline=-0.8ex]
+		\matrix (m) [
+					matrix of math nodes,
+					row sep=3em,
+					column sep=5em,
+					text height=2ex, text depth=0.5ex
+				]{
+					T^3 & T^2 \\
+					T^2 & T   \\
+				};
+
+			\path[->]
+				(m-1-1) edge node[above] {$T_\mu$} (m-1-2)
+				(m-1-1) edge node[left] {$\mu_T$} (m-2-1)
+				(m-2-1) edge node[below] {$\mu$} (m-2-2)
+				(m-1-2) edge node[right] {$\mu$} (m-2-2);
+	\end{tikzpicture}
+	\caption{Associatividade}
+	\label{fig:mon-comut-assoc}
+\end{figure}
 
 \subsection{Arrow -- Kleisli Triples}
 
-A partir de um monad podemos construir kleisli triples. Podemos pensar em kleisli triples como uma outra forma de representar sintaticamente um monad. Similar a monads, estas também obedecem as propriedades de associatividade e comutatividade.\\
-
-\textcolor{red}{<adicionar notações matemáticas e diagramas comutativos>}
+Triplas de Kleisli são equivalentes a mónades, oferecendo uma outra forma representação sintática. Nesta, objetos ainda estão contidos na categoria original, mas seus morfismos fazem parte da Categoria de Kleisli, habilitando a de composição destes.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
