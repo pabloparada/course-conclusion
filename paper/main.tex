@@ -106,7 +106,7 @@ Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore no
 Na última década muitos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
 \subsection{Lambda Expressions e Anonymous Inner Classes}
-Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures~\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
+Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
 
 \begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
 Integer[] integers = new Integer[]{5, 4, 3, 2, 1};
@@ -294,7 +294,7 @@ Estas funções capazes de preservar as características das categories $C$ e $D
 
 \subsection{Monad -- Endofunctor e Transformações Naturais}
 
-Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental chamada monad estrutura-se a partir de um endofunctor~\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais~\footnote{Mapeamento entre dois functors que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
+Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental chamada monad estrutura-se a partir de um endofunctor\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois functors que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
 
 \textbf{Definição}: o monad $T = (T, \eta, \mu)$ em uma category $C$ consiste em:
 
