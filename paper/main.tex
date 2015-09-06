@@ -47,7 +47,7 @@
 \bstctlcite{IEEEexample:BSTcontrol}
 
 \title { 
-	Category Theory \\
+	Teoria das Categorias \\
 	Arrows e Monads \\
 	em Java 
 }
@@ -103,7 +103,7 @@ Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore no
 
 \section{JAVA LAMBDA EXPRESSIONS}
 
-Na última década muitos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
+Na última década muitos dos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
 \subsection{Lambda Expressions e Anonymous Inner Classes}
 Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
@@ -130,10 +130,10 @@ De fato, apesar de expressarem o mesmo comportamento a nível de código, ambas 
 
 Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic~\cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lambda expression é acessada, ao contrário de AIC que acessa sua própria instância.
 
-Além destes benefícios, lambda expressions possibilitam a implementação de novas bibliotecas que trazem consigo as propriedades do paradigma funcional. São suficientemente poderosas para expressar as mesmas construções, sem os encargos impostos pelas antigas implementações. Além disso, a adoção do paradigma funcional torna os usuários aptos a aderirem a novas estruturas advindas da Category Theory, como a classe \textit{Optional}, disponível na última versão da linguagem.
+Além destes benefícios, lambda expressions possibilitam a implementação de novas bibliotecas que trazem consigo as propriedades do paradigma funcional. São suficientemente poderosas para expressar as mesmas construções, sem os encargos impostos pelas antigas implementações. Além disso, a adoção do paradigma funcional torna os usuários aptos a aderirem a novas estruturas advindas da Teoria das Categorias, como a classe \textit{Optional}, disponível na última versão da linguagem.
 
-\section{CATEGORY THEORY E SUAS ESTRUTURAS}
-A Category Theory (CT) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a CT estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como Group Theory\footnote{A Group Theory estuda as estruturas algébricas chamadas Group. Um Group é um conjunto de elementos finito ou infinito associado a uma operação binária, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a CT manifesta-se como um sistema de funções entre conjuntos de objetos~\cite{awodey2010category}.
+\section{TEORIA DAS CATEGORIAS E SUAS ESTRUTURAS}
+A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a TC estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como a Teoria dos Grupos\footnote{Teoria que estuda as estruturas algébricas de grupos. Um grupo é formado por um conjunto de elementos finito ou infinito associado a uma operação binária, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a TC manifesta-se como um sistema de funções entre conjuntos de objetos~\cite{awodey2010category}.
 
 \begin{figure}[!h]
 \centering
@@ -156,15 +156,15 @@ A Category Theory (CT) foi inventada no início dos anos 1940 por Samuel Eilenbe
 \label{fig:f-g-composition}
 \end{figure}
 
-Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que $f: A \rightarrow B$ e $g: B \rightarrow C$. A função $h$, definida por $h: A \rightarrow C$ dá-se como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da CT.
+Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que $f: A \rightarrow B$ e $g: B \rightarrow C$. A função $h$, definida por $h: A \rightarrow C$ dá-se como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da TC.
 
-A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de monad em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functors, categories, arrows, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
+A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de mónade em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functores, categorias e flechas, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
 
-\subsection{Category -- Objetos e Morfismos}
+\subsection{Categoria -- Objetos e Morfismos}
 \label{subsec:sub-cat}
-Uma category consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos \cite{spivak2014cts}.\\
+Uma categoria consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos \cite{spivak2014cts}.\\
 
-\textbf{Definição}: conforme \cite{spivak2014cts, maclane1971mat}, uma category $C$ é definida como:
+\textbf{Definição}: conforme \cite{spivak2014cts, maclane1971mat}, uma categoria $C$ é definida como:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item uma coleção $Ob(C)$, contendo os objetos de $C$;
@@ -234,11 +234,11 @@ Ambos axiomas podem ser representados pelos diagramas comutativos das figuras~\r
 	\end{minipage}
 \end{figure}
 
-\subsection{Functor -- Morfismos entre Categories}
+\subsection{Functor -- Morfismos entre Categorias}
 
 Um functor é um mapeamento entre duas categorias de tal modo que o domínio, contradomínio, objetos e morfismos são preservados~\cite{awodey2010category}.\\
 
-\textbf{Definição}: para as categorias $C$ e $D$, um functor $F: C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas~\cite{maclane1971mat}. São elas:
+\textbf{Definição}: para as categorias $C$ e $D$, um functor $F:C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas~\cite{maclane1971mat}. São elas:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item a função de objeto $F$ que atribui cada objeto $a \in Ob(C)$ para um objeto $F(a) \in Ob(D)$;
@@ -254,7 +254,7 @@ Tal que os seguintes axiomas são satisfeitos:
 
 \bigskip
 
-Estas funções capazes de preservar as características das categories $C$ e $D$ também podem ser ilustradas a partir da figura~\ref{fig:func-f}.
+Estas funções capazes de preservar as características das categorias $C$ e $D$ também podem ser ilustradas a partir da figura~\ref{fig:func-f}.
 
 \begin{figure}[h]
 			\begin{tikzpicture}[->, >= stealth', shorten >= 1pt, auto]
@@ -292,11 +292,11 @@ Estas funções capazes de preservar as características das categories $C$ e $D
 			\label{fig:func-f}
 \end{figure}
 
-\subsection{Monad -- Endofunctor e Transformações Naturais}
+\subsection{Mónade -- Endofunctor e Transformações Naturais}
 
-Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental chamada monad estrutura-se a partir de um endofunctor\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois functors que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
+Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental chamada mónade estrutura-se a partir de um endofunctor\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois functores que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
 
-\textbf{Definição}: o monad $T = (T, \eta, \mu)$ em uma category $C$ consiste em:
+\textbf{Definição}: a mónade $T = (T, \eta, \mu)$ em uma categoria $C$ consiste em:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item um endofunctor $T$, tal que $T: C \rightarrow C$;
@@ -307,7 +307,7 @@ Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matem�
 	\end{enumerate}
 \end{enumerate}
 
-Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-assoc} comutem, respeitando os axiomas de identidade e associatividade.
+Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-assoc} comutem, respeitando os axiomas de identidade (esquerda e direita) e associatividade.
 
 \begin{figure}[h]
 \centering
@@ -329,7 +329,7 @@ Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-asso
 				(m-1-3) edge node[right = 0.2cm, below = 0.001cm] {$=$} (m-2-2)
 				(m-1-2) edge node[right] {$\mu$} (m-2-2);
 	\end{tikzpicture}
-	\caption{Identidade à esquerda e direita}
+	\caption{Identidade à esquerda e à direita}
 	\label{fig:mon-comut-ident}
 \end{figure}
 
@@ -356,7 +356,7 @@ Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-asso
 	\label{fig:mon-comut-assoc}
 \end{figure}
 
-\subsection{Arrow -- Kleisli Triples}
+\subsection{Flechas -- Triplas de Kleisli}
 
 Triplas de Kleisli são equivalentes a mónades, oferecendo uma outra forma representação sintática~\cite{hill1994introduction}. Nesta, objetos ainda estão contidos na categoria original, mas seus morfismos fazem parte da Categoria de Kleisli, habilitando a de composição destes.
 
