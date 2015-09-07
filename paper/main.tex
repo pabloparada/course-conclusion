@@ -1,4 +1,3 @@
-
 \documentclass[10pt, conference]{IEEEtran}
 
 \usepackage[numbers,sort&compress,square]{natbib}
@@ -156,7 +155,7 @@ A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel E
 \label{fig:f-g-composition}
 \end{figure}
 
-Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que $f: A \rightarrow B$ e $g: B \rightarrow C$. A função $h$, definida por $h: A \rightarrow C$ dá-se como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da TC.
+Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que ${f: A \rightarrow B}$ e ${g: B \rightarrow C}$. A função $h$, definida por ${h: A \rightarrow C}$ dá-se como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da TC.
 
 A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de mónade em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functores, categorias e flechas, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
 
@@ -164,13 +163,13 @@ A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads
 \label{subsec:sub-cat}
 Uma categoria consiste em uma coleção de coisas, todas relacionadas de algum modo. As coisas são nomeadas de objetos e as relações de morfismos \cite{spivak2014cts}.\\
 
-\textbf{Definição}: conforme \cite{spivak2014cts, maclane1971mat}, uma categoria $C$ é definida como:
+\textbf{Definição}~\cite{spivak2014cts, maclane1971mat}: define-se a categoria $C$ como:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
-	\item uma coleção $Ob(C)$, contendo os objetos de $C$;
-	\item para cada par $a, b \in Ob(C)$, um conjunto $Hom_C(a, b)$ chamado de morfismos de $a$ para $b$;
-	\item para cada objeto $a \in Ob(C)$, um morfismo de \textit{identidade} em $a$ denotado por $id_a \in Hom_C(x, a)$;
-	\item para cada três objetos $a, b, c \in Ob(C)$, uma função de composição $\circ: Hom_C(b, c) \times Hom_C(a, b) \rightarrow Hom_C(a, c)$;
+	\item uma coleção ${Ob(C)}$, contendo os objetos de $C$;
+	\item para cada par ${a, b \in Ob(C)}$, um conjunto ${Hom_C(a, b)}$ chamado de morfismos de $a$ para $b$;
+	\item para cada objeto ${a \in Ob(C)}$, um morfismo de \textit{identidade} em $a$ denotado por ${id_a \in Hom_C(x, a)}$;
+	\item para cada três objetos ${a, b, c \in Ob(C)}$, uma função de composição $\circ: Hom_C(b, c) \times Hom_C(a, b) \rightarrow Hom_C(a, c)$;
 \end{enumerate}
 
 Dado os objetos $a, b \in Ob(C)$, denota-se o morfismo $f \in Hom_C(a, b)$ por $f: a \rightarrow b$; onde $a$ é o domínio e $b$ o contradomínio.\\
@@ -238,7 +237,7 @@ Ambos axiomas podem ser representados pelos diagramas comutativos das figuras~\r
 
 Um functor é um mapeamento entre duas categorias de tal modo que o domínio, contradomínio, objetos e morfismos são preservados~\cite{awodey2010category}.\\
 
-\textbf{Definição}: para as categorias $C$ e $D$, um functor $F:C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas~\cite{maclane1971mat}. São elas:
+\textbf{Definição}~\cite{maclane1971mat, spivak2014cts}: para as categorias $C$ e $D$, um functor $F:C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas. São elas:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item a função de objeto $F$ que atribui cada objeto $a \in Ob(C)$ para um objeto $F(a) \in Ob(D)$;
@@ -294,9 +293,9 @@ Estas funções capazes de preservar as características das categorias $C$ e $D
 
 \subsection{Mónade -- Endofunctor e Transformações Naturais}
 
-Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental chamada mónade estrutura-se a partir de um endofunctor\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois functores que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
+Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental mónade (também chamada de tripla) estrutura-se a partir de um endofunctor\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois functores que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
 
-\textbf{Definição}: a mónade $T = (T, \eta, \mu)$ em uma categoria $C$ consiste em:
+\textbf{Definição}~\cite{maclane1971mat, awodey2010category}: dada a mónade $T = (T, \eta, \mu)$ em uma categoria $C$ consiste em:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item um endofunctor $T$, tal que $T: C \rightarrow C$;
@@ -329,7 +328,7 @@ Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-asso
 				(m-1-3) edge node[right = 0.2cm, below = 0.001cm] {$=$} (m-2-2)
 				(m-1-2) edge node[right] {$\mu$} (m-2-2);
 	\end{tikzpicture}
-	\caption{Identidade à esquerda e à direita}
+	\caption{Identidade à Esquerda e à Direita}
 	\label{fig:mon-comut-ident}
 \end{figure}
 
@@ -356,9 +355,38 @@ Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-asso
 	\label{fig:mon-comut-assoc}
 \end{figure}
 
-\subsection{Flechas -- Triplas de Kleisli}
+\subsection{Flechas -- Categoria de Kleisli}
 
-Triplas de Kleisli são equivalentes a mónades, oferecendo uma outra forma representação sintática~\cite{hill1994introduction}. Nesta, objetos ainda estão contidos na categoria original, mas seus morfismos fazem parte da Categoria de Kleisli, habilitando a de composição destes.
+A partir de uma tripla obtemos a Categoria de Kleisli (CK), capaz de representar a mesma estrutura monádica através de uma sintaxe diferente~\cite{hill1994introduction}. Mantendo definições similares as já apresentadas em~\ref{subsec:sub-cat}, a CK destaca-se por abstrair a estrutura de objetos e morfismos sendo capaz compor o endofunctor subjacente.\\
+
+\textbf{Definição}~\cite{maclane1971mat, pedicchio2004categorical, hill1994introduction}: dada a tripla $(T, \eta, \mu)$ sob a categoria $C$, então define $C_T$ como:
+
+\begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
+	\item cada objeto $a \in Ob(C)$, um novo objeto $a_T$;
+	\item cada morfismo $f: a \rightarrow T_b$, um novo morfismo ${f^*: a_T \rightarrow b_T}$.
+\end{enumerate}
+
+\bigskip
+
+Declara-se os morfismos ${f^*: a_T \rightarrow b_T}$, $g^*: b_T \rightarrow c_T$ e ${h: c \rightarrow d_T}$, então o operador de extensão $-^*$ define:
+
+\begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
+	\item (Composição) $g^* \circ f^* = (\mu_c \circ T(g) \circ f)^*$.
+\end{enumerate}
+
+\bigskip
+
+Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes leis:
+
+\begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
+	\item (Identidade à Esquerda) $f^* \circ \eta_a = f$;
+	\item (Identidade à Direita) $\eta^*_a \circ h = id_{T(a)} \circ h$;
+	\item (Associatividade) $(g^* \circ (f^* \circ h)) = (g^* \circ f)^* \circ h$.
+\end{enumerate}
+
+\section{DEFININDO UM CONTRATO PARA MÓNADE}
+
+<escrever seção>
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
