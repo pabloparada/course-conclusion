@@ -47,26 +47,17 @@
 
 \title { 
 	Teoria das Categorias \\
-	Arrows e Monads \\
+	Flechas e Mónades \\
 	em Java 
 }
 
 \author{
 
-	\IEEEauthorblockN{ Mozart L. Siqueira }
+	\IEEEauthorblockN{ Mozart L. Siqueira¹, Pablo M. Parada² }
 	\IEEEauthorblockA{
-		Ciências da Computação \\
+		Ciência da Computação \\
 		Centro Universitário La Salle - Unilasalle \\
-		Email: mozarts@unilasalle.edu.br
-	}
-
-	\and	
-	
-	\IEEEauthorblockN { Pablo M. Parada }
-	\IEEEauthorblockA { 
-		Ciências da Computação \\
-		Centro Universitário La Salle - Unilasalle \\
-		Email: pablo.paradabol@gmail.com
+		E-mail: mozarts@unilasalle.edu.br¹, pablo.paradabol@gmail.com²
 	}
 }
 					  
@@ -92,20 +83,23 @@
 
 <escrever>
 
-\section{SOBRE O PARADIGMA FUNCIONAL}
+\section{PARADIGMA FUNCIONAL}
 \label{sec:func-para}
+
 Influenciado principalmente pelo desenvolvimento do lambda calculus~\cite{hudak1989conception}, compondo o grupo da programação declarativa, o paradigma funcional utiliza-se da ideia de expressar computações através de funções combinadas em expressões. Neste, funções determinam o que deverá ser computado, ao invés de como sera computado~\cite{louden2011programming}. Programas são construídos através da composição, tal que funções triviais (building blocks) são combinadas dando origem a novas funções que descrevem computações mais complexas.
 
 Building blocks não devem fazer uso de variáveis que dependam de estado, isso significa que a computação deve ser pura e sem efeitos colaterais (side-effects). Também destaca-se o princípio de imutabilidade, onde o valor de uma variável é determinado em sua criação, não permitindo novas atribuições posteriormente. Ao expressar um programa em uma linguagem funcional obtém-se uma maneira concisa de solucionar problemas, sendo que este constitui-se de operações e objetos atômicos e regras gerais para sua composição~\cite{michaelson2011introduction}.
 
-Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore nos fornece cada vez mais núcleos, não necessariamente núcleos mais rápidos~\cite{jsr335}. Em programas não-determinísticos, múltiplas threads podem alterar os dados representados por objetos imutáveis sem ocasionar os diversos problemas já conhecidos como dead locks e race conditions. Além do thread safety oferecido pela propriedade de imutabilidade, o conceito de funções transparentes referencialmente, ou seja, funções que não utilizam variáveis de estado, também oferecem vantagens para a concorrência com múltiplas threads podendo invocar tais funções esperando sempre o mesmo retorno, dados os mesmos argumentos.
+Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore nos fornece cada vez mais núcleos, não necessariamente núcleos mais rápidos~\cite{jsr335}. Em programas não-determinísticos, múltiplas threads podem alterar os dados representados por objetos imutáveis sem ocasionar os diversos problemas já conhecidos como dead locks e race conditions. Além do thread safety oferecido pela propriedade de imutabilidade, há também o conceito de funções transparentes referencialmente, ou seja, funções que não utilizam variáveis de estado. Em ambientes distribuídos onde a execução é subdivida em diferentes threads, a transparência referencial garante sempre o mesmo retorno, dados os mesmos argumentos.
+
+O paradigma funcional expressa programas através de composições mantendo a imutabilidade e a transparência referencial, portanto apresenta caraterísticas importantes para os tempos atuais. A complexidade intrínseca à ambientes distribuídos é reduzida. Programas completos são vistos como apenas uma aplicação de função.
 
 \section{JAVA LAMBDA EXPRESSIONS}
 
 Na última década muitos dos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
 \subsection{Lambda Expressions e Anonymous Inner Classes}
-Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
+Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a Listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
 
 \begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
 Integer[] integers = new Integer[]{5, 4, 3, 2, 1};
@@ -119,7 +113,7 @@ Arrays.sort(integers, new Comparator<Integer>() {
 
 Neste trecho de código o método \textit{sort} recebe como primeiro argumento um array de inteiros (já declarado na variável \textit{integers}) e como segundo qualquer instância que satisfaça o contrato de \textit{Comparator}. Assim, para satisfazer o segundo argumento, instância-se uma AIC através da palavra reservada \textbf{new} que implementa o método \textit{compare} declarado no contrato.
 
-Entretanto, com closures o mesmo método \textit{sort} pode ter seus argumentos simplificados. Conforme demonstrado na listagem~\ref{lst:array-lambda-sort}, ao invés de instanciar uma AIC, uma lambda expression é passada como segundo argumento, removendo a necessidade de instanciação de uma classe e a implementação de um contrato imposto por \textit{Comparator}.
+Entretanto, com closures o mesmo método \textit{sort} pode ter seus argumentos simplificados. Conforme demonstrado na Listagem~\ref{lst:array-lambda-sort}, ao invés de instanciar uma AIC, uma lambda expression é passada como segundo argumento, removendo a necessidade de instanciação de uma classe e a implementação de um contrato imposto por \textit{Comparator}.
 
 \begin{lstlisting}[caption={Sort - Lambda Expression}, label={lst:array-lambda-sort}]
 Arrays.sort(integers, (a, b) -> a.compareTo(b));
@@ -129,7 +123,7 @@ De fato, apesar de expressarem o mesmo comportamento a nível de código, ambas 
 
 Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic~\cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lambda expression é acessada, ao contrário de AIC que acessa sua própria instância.
 
-Além destes benefícios, lambda expressions possibilitam a implementação de novas bibliotecas que trazem consigo as propriedades do paradigma funcional. São suficientemente poderosas para expressar as mesmas construções, sem os encargos impostos pelas antigas implementações. Além disso, a adoção do paradigma funcional torna os usuários aptos a aderirem a novas estruturas advindas da Teoria das Categorias, como a classe \textit{Optional}, disponível na última versão da linguagem.
+Dessa forma, o suporte a lambda expressions traz benefícios para os usuários da linguagem. Tal funcionalidade está além de uma mera substituição, pois acrescenta um novo paradigma no ecossistema Java.
 
 \section{TEORIA DAS CATEGORIAS E SUAS ESTRUTURAS}
 A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a TC estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como a Teoria dos Grupos\footnote{Teoria que estuda as estruturas algébricas de grupos. Um grupo é formado por um conjunto de elementos finito ou infinito associado a uma operação binária, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a TC manifesta-se como um sistema de funções entre conjuntos de objetos~\cite{awodey2010category}.
@@ -155,9 +149,9 @@ A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel E
 \label{fig:f-g-composition}
 \end{figure}
 
-Conforme a figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, as funções $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que ${f: A \rightarrow B}$ e ${g: B \rightarrow C}$. A função $h$, definida por ${h: A \rightarrow C}$ dá-se como produto da composição de $f$ e $g$. A composição de funções, conforme a seção~\ref{sec:func-para} e expressa através de $h$ na figura~\ref{fig:f-g-composition}, firma uma ligação entre o paradigma funcional e a organização estrutural derivada da TC.
+Conforme a Figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que ${f: A \rightarrow B}$ e ${g: B \rightarrow C}$. Por fim, $h$ expressa a ideia de composição, sendo produto da união dos morfismos $f$ e $g$.
 
-A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de mónade em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como functores, categorias e flechas, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
+Dentro da TC, o conceito de categoria pode ser visto como um contexto matemático. Contextos relacionam entre si dando origem a funtores. Transformações naturais relacionam funtores, mantendo a composição de todas estruturas subjacentes. 
 
 \subsection{Categoria -- Objetos e Morfismos}
 \label{subsec:sub-cat}
@@ -172,7 +166,7 @@ Uma categoria consiste em uma coleção de coisas, todas relacionadas de algum m
 	\item para cada três objetos ${a, b, c \in Ob(C)}$, uma função de composição $\circ: Hom_C(b, c) \times Hom_C(a, b) \rightarrow Hom_C(a, c)$;
 \end{enumerate}
 
-Dado os objetos $a, b \in Ob(C)$, denota-se o morfismo $f \in Hom_C(a, b)$ por $f: a \rightarrow b$; onde $a$ é o domínio e $b$ o contradomínio.\\
+Dado os objetos $a, b \in Ob(C)$, denota-se o morfismo $f \in Hom_C(a, b)$ por $f: a \rightarrow b$; onde $a$ é o domínio e $b$ o contradomínio.\\	
 
 Estas operações em $C$ devem satisfazer os seguintes axiomas:
 
@@ -181,9 +175,7 @@ Estas operações em $C$ devem satisfazer os seguintes axiomas:
 	\item \textit{(Associatividade)} Sejam os objetos $a, b, c, d \in Ob(C)$ e os morfismos $f: a \rightarrow b$, $g: b \rightarrow c$ e $h: c \rightarrow d$. Então $(h \circ g) \circ f = h \circ (g \circ f)$.
 \end{enumerate}
 
-\bigskip
-
-Ambos axiomas podem ser representados pelos diagramas comutativos das figuras~\ref{fig:comut-ident} e \ref{fig:comut-assoc}.
+Ambos axiomas podem ser representados pelos diagramas comutativos das Figura~\ref{fig:comut-ident} e Figura~\ref{fig:comut-assoc}.
 
 \begin{figure}[h]
 	\begin{minipage}[t]{.48\linewidth}
@@ -233,16 +225,18 @@ Ambos axiomas podem ser representados pelos diagramas comutativos das figuras~\r
 	\end{minipage}
 \end{figure}
 
-\subsection{Functor -- Morfismos entre Categorias}
+\subsection{Funtor -- Morfismos entre Categorias}
 
-Um functor é um mapeamento entre duas categorias de tal modo que o domínio, contradomínio, objetos e morfismos são preservados~\cite{awodey2010category}.\\
+Um funtor é um mapeamento entre duas categorias de tal modo que o domínio, contradomínio, objetos e morfismos são preservados~\cite{awodey2010category}.\\
 
-\textbf{Definição}~\cite{maclane1971mat, spivak2014cts}: para as categorias $C$ e $D$, um functor $F:C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas. São elas:
+\textbf{Definição}~\cite{maclane1971mat, spivak2014cts}: para as categorias $C$ e $D$, um funtor $F:C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas. São elas:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item a função de objeto $F$ que atribui cada objeto $a \in Ob(C)$ para um objeto $F(a) \in Ob(D)$;
 	\item e a função de flecha (também chamada $F$) que atribui cada morfismo $f: a \rightarrow b \in Hom_C(a, b)$ para um morfismo $F(f):F(a) \rightarrow F(b) \in Hom_D(a, b)$.
 \end{enumerate}
+
+\bigskip
 
 Tal que os seguintes axiomas são satisfeitos:
 
@@ -253,7 +247,7 @@ Tal que os seguintes axiomas são satisfeitos:
 
 \bigskip
 
-Estas funções capazes de preservar as características das categorias $C$ e $D$ também podem ser ilustradas a partir da figura~\ref{fig:func-f}.
+Estas funções capazes de preservar as características das categorias $C$ e $D$ também podem ser ilustradas a partir da Figura~\ref{fig:func-f}.
 
 \begin{figure}[h]
 			\begin{tikzpicture}[->, >= stealth', shorten >= 1pt, auto]
@@ -287,18 +281,18 @@ Estas funções capazes de preservar as características das categorias $C$ e $D
 				\draw[->, shorten >= 1pt] (fa)-- node[left = 0.7cm, below = 0.001cm] {$F(g \circ f)$} (fc);
 
 			\end{tikzpicture}
-			\caption{Functor $F$}
+			\caption{Funtor $F$}
 			\label{fig:func-f}
 \end{figure}
 
-\subsection{Mónade -- Endofunctor e Transformações Naturais}
+\subsection{Mónade -- Endofuntor e Transformações Naturais}
 
-Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental mónade (também chamada de tripla) estrutura-se a partir de um endofunctor\footnote{Um functor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois functores que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
+Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental mónade (também chamada de tripla) estrutura-se a partir de um endofuntor\footnote{Um funtor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois funtores que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
 
 \textbf{Definição}~\cite{maclane1971mat, awodey2010category}: dada a mónade $T = (T, \eta, \mu)$ em uma categoria $C$ consiste em:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
-	\item um endofunctor $T$, tal que $T: C \rightarrow C$;
+	\item um endofuntor $T$, tal que $T: C \rightarrow C$;
 	\item nas transformações naturais:
 	\begin{enumerate}[label={}]
 		\item (\textit{Identidade}) $\eta: id_C \rightarrow T$;
@@ -306,7 +300,7 @@ Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matem�
 	\end{enumerate}
 \end{enumerate}
 
-Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-assoc} comutem, respeitando os axiomas de identidade (esquerda e direita) e associatividade.
+Fazendo com que os diagramas da Figura~\ref{fig:mon-comut-ident} e Figura~\ref{fig:mon-comut-assoc} comutem, respeitando os axiomas de identidade (esquerda e direita) e associatividade.
 
 \begin{figure}[h]
 \centering
@@ -357,9 +351,9 @@ Fazendo com que os diagramas~\ref{fig:mon-comut-ident} e~\ref{fig:mon-comut-asso
 
 \subsection{Flechas -- Categoria de Kleisli}
 
-A partir de uma tripla obtemos a Categoria de Kleisli (CK), capaz de representar a mesma estrutura monádica através de uma sintaxe diferente~\cite{hill1994introduction}. Mantendo definições similares as já apresentadas em~\ref{subsec:sub-cat}, a CK destaca-se por abstrair a estrutura de objetos e morfismos sendo capaz compor o endofunctor subjacente.\\
+A partir de uma tripla obtemos a Categoria de Kleisli (CK), capaz de representar a mesma estrutura monádica através de uma sintaxe diferente~\cite{hill1994introduction}. Mantendo definições similares as já apresentadas em~\ref{subsec:sub-cat}, a CK destaca-se por abstrair a estrutura de objetos e morfismos sendo capaz compor o endofuntor subjacente.\\
 
-\textbf{Definição}~\cite{maclane1971mat, pedicchio2004categorical, hill1994introduction}: dada a tripla $(T, \eta, \mu)$ sob a categoria $C$, então define $C_T$ como:
+\textbf{Definição}~\cite{maclane1971mat, pedicchio2004categorical, hill1994introduction}: dada a tripla $(T, \eta, \mu)$ sob a categoria $C$, então define-se $C_T$ como:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item cada objeto $a \in Ob(C)$, um novo objeto $a_T$;
@@ -368,7 +362,7 @@ A partir de uma tripla obtemos a Categoria de Kleisli (CK), capaz de representar
 
 \bigskip
 
-Declara-se os morfismos ${f^*: a_T \rightarrow b_T}$, $g^*: b_T \rightarrow c_T$ e ${h: c \rightarrow d_T}$, então o operador de extensão $-^*$ define:
+Dado os morfismos ${f^*: a_T \rightarrow b_T}$, $g^*: b_T \rightarrow c_T$ e ${h: c \rightarrow d_T}$ e o operador de extensão $-^*$, então:
 
 \begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
 	\item (Composição) $g^* \circ f^* = (\mu_c \circ T(g) \circ f)^*$.
@@ -384,9 +378,11 @@ Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes lei
 	\item (Associatividade) $(g^* \circ (f^* \circ h)) = (g^* \circ f)^* \circ h$.
 \end{enumerate}
 
+\bigskip
+
 \section{DEFININDO UM CONTRATO PARA MÓNADE}
 
-<escrever seção>
+A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de mónade em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como funtores, categorias e flechas, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
