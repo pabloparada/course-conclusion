@@ -126,7 +126,9 @@ Diferentemente de AIC, lambdas postergam a estratégia de compilação para em t
 Dessa forma, o suporte a lambda expressions traz benefícios para os usuários da linguagem. Tal funcionalidade está além de uma mera substituição, pois acrescenta um novo paradigma no ecossistema Java.
 
 \section{TEORIA DAS CATEGORIAS E SUAS ESTRUTURAS}
-A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a TC estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Tal como a Teoria dos Grupos\footnote{Teoria que estuda as estruturas algébricas de grupos. Um grupo é formado por um conjunto de elementos finito ou infinito associado a uma operação binária, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a TC manifesta-se como um sistema de funções entre conjuntos de objetos~\cite{awodey2010category}.
+A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a TC estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Por volta dos anos 1980, computação e TC passaram a ser consideradas áreas correlatas de estudo~\cite{carlos2006caracteristicas}.
+
+Aplicações do modelo categorial ocorrem na composição de funções encorajada pelo paradigma funcional. Além do mais, em linguagens de programação, o estudo dos tipos pode ser representado através de categorias. Muitos modelos computacionais que fazem uso de estruturas de dados como grafos podem ser generalizados para categorias de grafos. Portanto, tais aplicações demonstram a capacidade de abstração e a importância da TC para a computação.
 
 \begin{figure}[!h]
 \centering
@@ -149,9 +151,9 @@ A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel E
 \label{fig:f-g-composition}
 \end{figure}
 
-Conforme a Figura~\ref{fig:f-g-composition}, os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que ${f: A \rightarrow B}$ e ${g: B \rightarrow C}$. Por fim, $h$ expressa a ideia de composição, sendo produto da união dos morfismos $f$ e $g$.
+Tal como a Teoria dos Grupos\footnote{Teoria que estuda as estruturas algébricas de grupos. Um grupo é formado por um conjunto de elementos finito ou infinito associado a uma operação binária, como por exemplo a adição ou multiplicação.} abstrai a ideia do sistema de permutações como simetrias de um objeto geométrico, a TC manifesta-se como um sistema de funções entre conjuntos de objetos~\cite{awodey2010category}. Esta abstração pode ser vista a partir da Figura~\ref{fig:f-g-composition}, onde os conjuntos de objetos são representado por $A$, $B$ e $C$. Nesta mesma estrutura, $f$ e $g$ denotam os morfismos entre os diferentes conjuntos de objetos, tal que ${f: A \rightarrow B}$ e ${g: B \rightarrow C}$. Por fim, $h$ expressa a ideia de composição, sendo produto da união dos morfismos $f$ e $g$. 
 
-Dentro da TC, o conceito de categoria pode ser visto como um contexto matemático. Contextos relacionam entre si dando origem a funtores. Transformações naturais relacionam funtores, mantendo a composição de todas estruturas subjacentes. 
+A TC nasceu como uma ferramenta matemática, com propósito de estudar a relação objetos e morfismos. Contudo, tal conceito tornou-se uma ferramenta utilizada por diversas áreas da ciência. Na computação, diversos problemas são abstraídos através de estruturas da TC, pois ajudam na sua resolução.
 
 \subsection{Categoria -- Objetos e Morfismos}
 \label{subsec:sub-cat}
