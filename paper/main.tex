@@ -16,6 +16,8 @@
 
 \usetikzlibrary{matrix, arrows}
 
+\graphicspath{ {images/} }
+
 % configs listings
 \renewcommand{\lstlistingname}{Listagem}
 \lstset{
@@ -228,7 +230,7 @@ Ambos axiomas podem ser representados pelos diagramas comutativos das Figura~\re
 \end{figure}
 
 \subsection{Funtor -- Morfismos entre Categorias}
-
+\label{subsec:funtor}
 Um funtor é um mapeamento entre duas categorias de tal modo que o domínio, contradomínio, objetos e morfismos são preservados~\cite{awodey2010category}.\\
 
 \textbf{Definição}~\cite{maclane1971mat, spivak2014cts}: para as categorias $C$ e $D$, um funtor $F:C \rightarrow D$ com domínio $C$ e contradomínio $D$ consiste em duas funções relacionadas. São elas:
@@ -288,7 +290,7 @@ Estas funções capazes de preservar as características das categorias $C$ e $D
 \end{figure}
 
 \subsection{Mónade -- Endofuntor e Transformações Naturais}
-
+\label{subsec:monad}
 Podendo ser visto como um padrão estrutural que ocorre diversos ramos da matemática~\cite{spivak2014cts}, a construção fundamental mónade (também chamada de tripla) estrutura-se a partir de um endofuntor\footnote{Um funtor que mapeia uma categoria para ela mesma.} e das transformações naturais\footnote{Mapeamento entre dois funtores que possuem o mesmo domínio e contradomínio, tal que satisfaça a condição de naturalidade.} de identidade e multiplicação.\\
 
 \textbf{Definição}~\cite{maclane1971mat, awodey2010category}: dada a mónade $T = (T, \eta, \mu)$ em uma categoria $C$ consiste em:
@@ -352,7 +354,7 @@ Fazendo com que os diagramas da Figura~\ref{fig:mon-comut-ident} e Figura~\ref{f
 \end{figure}
 
 \subsection{Flechas -- Categoria de Kleisli}
-
+\label{subsec:arrow}
 A partir de uma tripla obtemos a Categoria de Kleisli (CK), capaz de representar a mesma estrutura monádica através de uma sintaxe diferente~\cite{hill1994introduction}. Mantendo definições similares as já apresentadas em~\ref{subsec:sub-cat}, a CK destaca-se por abstrair a estrutura de objetos e morfismos sendo capaz compor o endofuntor subjacente.\\
 
 \textbf{Definição}~\cite{maclane1971mat, pedicchio2004categorical, hill1994introduction}: dada a tripla $(T, \eta, \mu)$ sob a categoria $C$, então define-se $C_T$ como:
@@ -382,9 +384,15 @@ Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes lei
 
 \bigskip
 
-\section{DEFININDO UM CONTRATO PARA MÓNADE}
+\section{TEORIA DAS CATEGORIAS APLICADA}
 
-A partir desta ligação, Moggi em seus trabalhos \cite{moggi1989lambdaandmonads, mogi1991notionsofcompandmonad} introduziu o conceito de mónade em Haskell. Este foi capaz de fornecer os mecanismos necessários para capacitar a solução de um dos problemas fundamentais da linguagem,  pertencente ao conjunto The Awkward Squad \cite{jones2001tacklingthe}. A partir de outros conceitos como funtores, categorias e flechas, o trabalho de Moggi foi incrementado criando novas estruturas que estão presentes nas versões mais recentes da linguagem.
+As funções do paradigma funcional podem ser vistas como morfismos na categoria dos tipos. Percebendo estas relações, Wadler~\cite{peyton1993imperative, wadler1995monads, wadler1992comprehending, wadler1992essence} utilizou o conceito de mónade para estruturar programas puramente funcionais em Haskell. Assim, o primeiro problema pertencente ao conjunto Awkward Squad foi solucionado~\cite{jones2001tacklingthe}.
+
+A introdução da mónade para E/S (entrada e saída) padronizou a maneira de executar tais ações e encapsular seus efeitos colaterais. Assim, outras mónades foram adicionadas à linguagem, estendendo as bibliotecas padrões para fornecer suporte a exceções, nulidade, concorrência, etc. Consequentemente, mónades estabeleceram um novo padrão para Haskell. Além do mais, tornam a linguagem útil, pois confrontam o Awkward Squad~\cite{jones2001tacklingthe}.
+
+Além de mónades, outros conceitos da TC também foram incluídos na linguagem. Assim, Haskell define uma hierarquia de \textit{typeclasses} que fornecem a base categorial para seus utilizadores. Esta hierarquia pode ser vista na figura <incluir figura typeclasses>.
+
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
