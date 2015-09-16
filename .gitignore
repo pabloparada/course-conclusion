@@ -34,3 +34,6 @@ paper/*.log
 paper/*.synctex.gz
 paper/*.gz
 paper/*.dvi
+paper/images/*.aux
+paper/images/*.tex.aux
+paper/images/*.dia~
