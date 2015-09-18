@@ -1,5 +1,6 @@
 \documentclass[10pt, conference]{IEEEtran}
 
+% libraries preamble
 \usepackage[numbers,sort&compress,square]{natbib}
 \usepackage{listings}
 \usepackage{lipsum}
@@ -12,11 +13,11 @@
 \usepackage{enumitem}
 \usepackage{subcaption}
 \usepackage{tikz}
-\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{hyperref}
 
+% enable matrix and arrows constructs for tikz
 \usetikzlibrary{matrix, arrows}
-
-\graphicspath{ {images/} }
 
 % configs listings
 \renewcommand{\lstlistingname}{Listagem}
@@ -45,7 +46,7 @@
 \renewcommand\footnoterule{\kern-3pt \hrule width 2in \kern 2.6pt}
 
 \begin{document}
-\bstctlcite{IEEEexample:BSTcontrol}
+\bstctlcite{BSTcontrol}
 
 \title { 
 	Teoria das Categorias \\
@@ -369,7 +370,7 @@ A partir de uma tripla obtemos a Categoria de Kleisli (CK), capaz de representar
 Dado os morfismos ${f^*: a_T \rightarrow b_T}$, $g^*: b_T \rightarrow c_T$ e ${h: c \rightarrow d_T}$ e o operador de extensão $-^*$, então:
 
 \begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
-	\item (Composição) $g^* \circ f^* = (\mu_c \circ T(g) \circ f)^*$.
+	\item (\textit{Composição}) $g^* \circ f^* = (\mu_c \circ T(g) \circ f)^*$.
 \end{enumerate}
 
 \bigskip
@@ -377,9 +378,9 @@ Dado os morfismos ${f^*: a_T \rightarrow b_T}$, $g^*: b_T \rightarrow c_T$ e ${h
 Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes leis:
 
 \begin{enumerate}[label={}, leftmargin = 2em, topsep = 0pt, itemsep = 1ex,partopsep = 1ex, parsep = 1ex]
-	\item (Identidade à Esquerda) $f^* \circ \eta_a = f$;
-	\item (Identidade à Direita) $\eta^*_a \circ h = id_{T(a)} \circ h$;
-	\item (Associatividade) $(g^* \circ (f^* \circ h)) = (g^* \circ f)^* \circ h$.
+	\item (\textit{Identidade à Esquerda}) $f^* \circ \eta_a = f$;
+	\item (\textit{Identidade à Direita}) $\eta^*_a \circ h = id_{T(a)} \circ h$;
+	\item (\textit{Associatividade}) $(g^* \circ (f^* \circ h)) = (g^* \circ f)^* \circ h$.
 \end{enumerate}
 
 \bigskip
@@ -388,9 +389,9 @@ Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes lei
 
 As funções do paradigma funcional podem ser vistas como morfismos na categoria dos tipos. Percebendo estas relações, Wadler~\cite{peyton1993imperative, wadler1995monads, wadler1992comprehending, wadler1992essence} utilizou o conceito de mónade para estruturar programas puramente funcionais em Haskell. Assim, o primeiro problema pertencente ao conjunto Awkward Squad foi solucionado~\cite{jones2001tacklingthe}.
 
-A introdução da mónade para E/S (entrada e saída) padronizou a maneira de executar tais ações e encapsular seus efeitos colaterais. Assim, outras mónades foram adicionadas à linguagem, estendendo as bibliotecas padrões para fornecer suporte a exceções, nulidade, concorrência, etc. Consequentemente, mónades estabeleceram um novo padrão para Haskell. Além do mais, tornam a linguagem útil, pois confrontam o Awkward Squad~\cite{jones2001tacklingthe}.
+A introdução da mónade para E/S (entrada e saída) padronizou a maneira de executar  estas ações e encapsular seus efeitos colaterais. Assim, outras mónades foram adicionadas à linguagem, estendendo as bibliotecas padrões para fornecer suporte a exceções, nulidade, concorrência, etc. Logo, mónades trouxeram utilidade para a linguagem, pois confrontaram o Awkward Squad~\cite{jones2001tacklingthe}.
 
-Além de mónades, outros conceitos da TC também foram incluídos na linguagem. Assim, Haskell definiu-se uma hierarquia de typeclasses que fornecem a base categorial para seus utilizadores. Esta hierarquia pode ser vista na Figura~\ref{fig:typeclassopedia}.
+Com a rápida adoção de mónades para a solução de problemas envolvendo E/S, percebeu-se que outros conceitos da TC também poderiam ser aproveitados. Estes foram incorporados e constituem a hierarquia de type classes.
 
 \begin{figure}[h]
 \centering
@@ -398,9 +399,17 @@ Além de mónades, outros conceitos da TC também foram incluídos na linguagem.
 		\input{images/typeclassopedia.tex}
 	}
 	\bigskip
-	\caption{Typeclassopedia}
+	\caption[Typeclass Hierarchy]{Hierarquia das type classes~\footnotemark}
 	\label{fig:typeclassopedia}
 \end{figure}
+	\footnotetext{Fonte:~\url{https://wiki.haskell.org/Typeclassopedia}. Acessado em 17/09/2015.}
+	
+A Figura~\ref{fig:typeclassopedia} conforme a Typeclassopedia~\cite{web2015typeclassopedia} demonstra as relações entre as type classes, identificadas por flechas tracejadas e pontilhadas:
+
+\begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
+	\item (\textit{Tracejadas}) Determinam relações de é-um, ou seja, se existe uma flecha de A para B, então todo B é um A;
+	\item (\textit{Pontilhadas}) Indicam algum tipo de relação, como por exemplo a equivalência entre Monoid e MonadPlus.
+\end{enumerate}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
