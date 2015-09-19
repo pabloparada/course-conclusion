@@ -386,10 +386,12 @@ Type classes definem comportamentos genéricos que podem ser implementados por u
 		\input{images/typeclassopedia.tex}
 	}
 	\bigskip
-	\caption[Typeclass Hierarchy]{Hierarquia das type classes\footnotemark}
+	\caption[Typeclass Hierarchy]{Hierarquia das type classes\footref{fnt:typeclassopedia}}
 	\label{fig:typeclassopedia}
 \end{figure}
-\footnotetext{Fonte:~\url{https://wiki.haskell.org/Typeclassopedia}. Acessado em 17/09/2015.}
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte:~\url{https://wiki.haskell.org/Typeclassopedia}. Acessado em 17/09/2015.\label{fnt:typeclassopedia}}
 	
 Conforme a Typeclassopedia~\cite{web2015typeclassopedia}, a Figura~\ref{fig:typeclassopedia} demonstra as relações entre as type classes, identificadas por flechas tracejadas e pontilhadas:
 
@@ -409,13 +411,14 @@ instance Functor Maybe where
     fmap f Nothing  = Nothing
 \end{lstlisting}
 
-\footnote{Fonte: M. Lipovaca,~\textit{Learn You a Haskell for Great Good!: A Beginner's Guide}, 2011.\label{fnt:type-class-funtor}}
-
 A Listagem~\ref{lst:fmap-maybe} demonstra a utilização da função fmap em conjunto do variante Just com valor 200 e a função de multiplicação parcialmente aplicada.
 
 \begin{lstlisting}[caption={Função fmap para Maybe\protect\footref{fnt:type-class-funtor}}, style=haskell-style, label={lst:fmap-maybe}]
 fmap (*2) (Just 200)  
 \end{lstlisting}
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: M. Lipovaca,~\textit{Learn You a Haskell for Great Good!: A Beginner's Guide}, 2011.\label{fnt:type-class-funtor}}
 
 \textcolor{red}{<mostrar a type class de monad e explicar type constructors>}\\
 
