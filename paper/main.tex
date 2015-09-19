@@ -15,6 +15,7 @@
 \usepackage{tikz}
 \usepackage{caption}
 \usepackage{hyperref}
+\usepackage{scrextend}
 
 % enable matrix and arrows constructs for tikz
 \usetikzlibrary{matrix, arrows}
@@ -399,20 +400,20 @@ Conforme a Typeclassopedia~\cite{web2015typeclassopedia}, a Figura~\ref{fig:type
 
 A implementação de uma type class pode ser visualizada na Listagem~\ref{lst:type-class-functor}, onde a primeira declaração incorpora uma nova classe com nome Functor, uma variável de tipo f e um comportamento explicitado pela função fmap. Na segunda, a instanciação de Maybe fornece a implementação de fmap, tornando este tipo um Functor.
 
-\begin{lstlisting}[caption={Type class para funtores\protect\footnotemark\label{fnt:type-class-funtor}}, style=haskell-style, label={lst:type-class-functor}]
+\begin{lstlisting}[caption={Type class para funtores\protect\footref{fnt:type-class-funtor}}, style=haskell-style, label={lst:type-class-functor}]
 class Functor f where  
     fmap :: (a -> b) -> f a -> f b 
-
 
 instance Functor Maybe where  
     fmap f (Just x) = Just (f x)  
     fmap f Nothing  = Nothing
 \end{lstlisting}
-\footnotetext{Fonte: M. Lipovaca,~\textit{Learn You a Haskell for Great Good!: A Beginner's Guide}, 2011.\label{fnt:type-class-funtor}}
+
+\footnote{Fonte: M. Lipovaca,~\textit{Learn You a Haskell for Great Good!: A Beginner's Guide}, 2011.\label{fnt:type-class-funtor}}
 
 A Listagem~\ref{lst:fmap-maybe} demonstra a utilização da função fmap em conjunto do variante Just com valor 200 e a função de multiplicação parcialmente aplicada.
 
-\begin{lstlisting}[caption={Função fmap para Maybe\protect\footnotemark\label{fnt:type-class-funtor}}, style=haskell-style, label={lst:fmap-maybe}]
+\begin{lstlisting}[caption={Função fmap para Maybe\protect\footref{fnt:type-class-funtor}}, style=haskell-style, label={lst:fmap-maybe}]
 fmap (*2) (Just 200)  
 \end{lstlisting}
 
