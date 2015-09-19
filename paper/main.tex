@@ -21,26 +21,10 @@
 
 % configs listings
 \renewcommand{\lstlistingname}{Listagem}
-\lstset{
-	basicstyle = \footnotesize\tt,
-	breakatwhitespace = true,
-	breaklines = true,
-	captionpos = b,
-	extendedchars = true,
-	language = Java,
-	frame = single,
-	keywordstyle = \bf,
-	showspaces = false,
-	showstringspaces = false,
-	showtabs = false,
-	tabsize = 2,
-	abovecaptionskip = 1em,
-	belowcaptionskip = 1em,
-	aboveskip = 2em,
-    belowskip = 5pt,
-    xleftmargin = 5pt,
-	xrightmargin = 5pt
-}
+
+\lstdefinestyle{java-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, language = Java, frame = single, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
+
+\lstdefinestyle{haskell-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, language = haskell, frame = single, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
 
 % configs footnotes
 \renewcommand\footnoterule{\kern-3pt \hrule width 2in \kern 2.6pt}
@@ -104,7 +88,7 @@ Na última década muitos dos problemas encontrados -- como enviar não só dado
 \subsection{Lambda Expressions e Anonymous Inner Classes}
 Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a Listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
 
-\begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
+\begin{lstlisting}[caption={Sort - Anonymous Inner Class}, style=java-style, label={lst:array-aic-sort}]
 Integer[] integers = new Integer[]{5, 4, 3, 2, 1};
 
 Arrays.sort(integers, new Comparator<Integer>() {
@@ -385,13 +369,15 @@ Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes lei
 
 \bigskip
 
-\section{TEORIA DAS CATEGORIAS APLICADA}
+\section{APLICAÇÃO EM HASKELL}
 
 As funções do paradigma funcional podem ser vistas como morfismos na categoria dos tipos. Percebendo estas relações, Wadler~\cite{peyton1993imperative, wadler1995monads, wadler1992comprehending, wadler1992essence} utilizou o conceito de mónade para estruturar programas puramente funcionais em Haskell. Assim, o primeiro problema pertencente ao conjunto Awkward Squad foi solucionado~\cite{jones2001tacklingthe}.
 
 A introdução da mónade para E/S (entrada e saída) padronizou a maneira de executar  estas ações e encapsular seus efeitos colaterais. Assim, outras mónades foram adicionadas à linguagem, estendendo as bibliotecas padrões para fornecer suporte a exceções, nulidade, concorrência, etc. Logo, mónades trouxeram utilidade para a linguagem, pois confrontaram o Awkward Squad~\cite{jones2001tacklingthe}.
 
-Com a rápida adoção de mónades para a solução de problemas envolvendo E/S, percebeu-se que outros conceitos da TC também poderiam ser aproveitados. Estes foram incorporados e constituem a hierarquia de type classes.
+Com a rápida adoção de mónades para a solução de problemas envolvendo E/S, constatou-se que outros conceitos da TC também poderiam ser aproveitados. Qualquer estrutura recursiva (listas, mapas, árvores, grafos) que pode ser mapeada a partir de uma função é representada por um funtor. A categoria de Haskell, chamada Hask, preocupa-se em tratar tipos como objetos e funções como morfismos, fornecendo funções de composição e identidade.
+
+Type classes definem comportamentos genéricos que podem ser implementados por um conjunto variado de tipos. Esta funcionalidade tornou a implementação das estruturas previamente mencionadas disponíveis para qualquer tipo de dado, dependendo apenas da implementação de suas instancias~\cite{o2008real}.
 
 \begin{figure}[h]
 \centering
@@ -399,17 +385,40 @@ Com a rápida adoção de mónades para a solução de problemas envolvendo E/S,
 		\input{images/typeclassopedia.tex}
 	}
 	\bigskip
-	\caption[Typeclass Hierarchy]{Hierarquia das type classes~\footnotemark}
+	\caption[Typeclass Hierarchy]{Hierarquia das type classes\footnotemark}
 	\label{fig:typeclassopedia}
 \end{figure}
-	\footnotetext{Fonte:~\url{https://wiki.haskell.org/Typeclassopedia}. Acessado em 17/09/2015.}
+\footnotetext{Fonte:~\url{https://wiki.haskell.org/Typeclassopedia}. Acessado em 17/09/2015.}
 	
-A Figura~\ref{fig:typeclassopedia} conforme a Typeclassopedia~\cite{web2015typeclassopedia} demonstra as relações entre as type classes, identificadas por flechas tracejadas e pontilhadas:
+Conforme a Typeclassopedia~\cite{web2015typeclassopedia}, a Figura~\ref{fig:typeclassopedia} demonstra as relações entre as type classes, identificadas por flechas tracejadas e pontilhadas:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item (\textit{Tracejadas}) Determinam relações de é-um, ou seja, se existe uma flecha de A para B, então todo B é um A;
 	\item (\textit{Pontilhadas}) Indicam algum tipo de relação, como por exemplo a equivalência entre Monoid e MonadPlus.
 \end{enumerate}
+
+A implementação de uma type class pode ser visualizada na Listagem~\ref{lst:type-class-functor}, onde a primeira declaração incorpora uma nova classe com nome Functor, uma variável de tipo f e um comportamento explicitado pela função fmap. Na segunda, a instanciação de Maybe fornece a implementação de fmap, tornando este tipo um Functor.
+
+\begin{lstlisting}[caption={Type class para funtores\protect\footnotemark\label{fnt:type-class-funtor}}, style=haskell-style, label={lst:type-class-functor}]
+class Functor f where  
+    fmap :: (a -> b) -> f a -> f b 
+
+
+instance Functor Maybe where  
+    fmap f (Just x) = Just (f x)  
+    fmap f Nothing  = Nothing
+\end{lstlisting}
+\footnotetext{Fonte: M. Lipovaca,~\textit{Learn You a Haskell for Great Good!: A Beginner's Guide}, 2011.\label{fnt:type-class-funtor}}
+
+A Listagem~\ref{lst:fmap-maybe} demonstra a utilização da função fmap em conjunto do variante Just com valor 200 e a função de multiplicação parcialmente aplicada.
+
+\begin{lstlisting}[caption={Função fmap para Maybe\protect\footnotemark\label{fnt:type-class-funtor}}, style=haskell-style, label={lst:fmap-maybe}]
+fmap (*2) (Just 200)  
+\end{lstlisting}
+
+\textcolor{red}{<mostrar a type class de monad e explicar type constructors>}\\
+
+Apesar de parecidas, type classes não são iguais à interfaces, presentes na orientação a objetos. Type classes expressam sobrecarga de método (polimorfismo ad-hoc) enquanto interfaces trabalham com instâncias de classes e sobrecarga por subtipagem.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
