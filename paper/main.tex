@@ -404,17 +404,17 @@ A implementação de uma type class pode ser visualizada na Listagem~\ref{lst:ty
 
 \begin{lstlisting}[caption={Type class Eq\protect\footref{fnt:type-class-eq}}, style=haskell-style, label={lst:type-class-eq}]
 class Eq a where
-	equals: a -> a -> Bool
+	equals :: a -> a -> Bool
 \end{lstlisting}
 
 Na Listagem~\ref{lst:instance-eq}, instancia-se $Eq$ para os tipos $Int$ e $Char$. A primeira instancia declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parametro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
 
 \begin{lstlisting}[caption={Instancias Eq\protect\footref{fnt:type-class-eq}}, style=haskell-style, label={lst:instance-eq}]
 instance Eq Int where
-	equals: primEqInt
+	equals = primEqInt
 	
 instance Eq Char where
-	equals: primEqChar
+	equals = primEqChar
 \end{lstlisting}
 	
 \addtocounter{footnote}{1}
