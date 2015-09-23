@@ -422,11 +422,53 @@ instance Eq Char where
 
 Com a instancia de $Eq \; Int$ é possível comparar dois inteiros tal que ${equals({1 + 1}, 2)}$ retorna $True$; ou ${equals({1 + 1}, 0)}$ retorna $False$. De maneira similar, com $Eq \; Char$ é possível comparar dois caracteres, onde ${equals('a', {'a'})}$ retorna $True$; ou ${equals('a', {'b'})}$ retorna $False$.
 
-\subsection{A Type Class Monad -- Construção Fundamental}
+\subsection{Classe Monad}
 
-\textcolor{red}{<descrever a type class monad, mostrar exemplos de utilização e linkar com a TC>}
 
-\subsection{A Type Class Arrow -- Generalização de Mónades}
+Para a programação funcional, mónades oferecem um contexto computacional que encapsula efeitos colaterais. Além disso, tal contexto monádico permite o encadeamento de funções que operam sob um determinado tipo. Em Haskell, esta abstração é expressa através da type class $Monad$.
+
+\begin{lstlisting}[caption={Type class Monad\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:type-class-monad}]
+class Monad m where
+	(>>=)  :: m a -> (a -> m b) -> m b
+	(>>)   :: (>>) m a -> m b -> m b
+	return :: a -> m a
+\end{lstlisting}
+
+Conforme a Listagem~\ref{lst:type-class-monad}, a type class $Monad$ consiste em um tipo construtor $m$ e as operações $>>=$, $>>$ e $return$. A operação $>>$ existe apenas como um facilitador para a composição de funções no contexto $m$. $>>=$ e $return$ são equivalentes as transformações naturais de multiplicação e identidade.
+
+A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é bind, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. Bind aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando um novo $Monad$ do tipo $m\;b$.
+
+Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
+
+\begin{lstlisting}[caption={Monad - Associatividade e Identidade\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
+return a >>= k  =  k a
+m >>= return  =  m
+m >>= (\x -> k x >>= h)  =  (m >>= k) >>= h
+\end{lstlisting}
+
+A possibilidade de encadear funções com $>>=$ é tão importante que diversas linguagens funcionais oferecem suporte sintático para mónades. Em Haskell, esta sintaxe especial é chamada de \textbf{do notation}~\cite{marlow2010haskell}.
+
+\begin{lstlisting}[caption={Encadeando Funções em Monad\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:func-chaining}]
+putStr "x: " >>
+getLine >>= \l -> 
+return (words l)
+\end{lstlisting}
+
+Na Listagem~\ref{lst:func-chaining} as funções $putStr$ e $getLine$ são encadeadas pelos operadores $>>$ e $>>=$. Estas mesmas funções podem ser encadeadas utilizando a utilizando o suporte sintático de \textbf{do notation}, conforme a Listagem~\ref{lst:do-notation}.
+
+\begin{lstlisting}[caption={Do Notation\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:do-notation}]
+do 
+	putStr "x: "
+	l <- getLine
+	return (words l)
+\end{lstlisting}
+
+Com esta notação, um código pertencente ao paradigma funcional é escrito de forma imperativa, ou seja, a computação é declarada passo a passo. Assim, obtém-se uma sintaxe simplificada para expressar efeitos colaterais em linguagens puramente funcionais como Haskell.
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: S. Marlow \textit{et al.}, Haskell 2010 Language Report, p. 25--81, 2010. Disponível em: \url{http://www.haskell.org/onlinereport/haskell2010}. Acessado em: 23/09/2015.\label{fnt:haskell-language-report}}
+
+\subsection{Classe Arrow}
 
 \textcolor{red}{<descrever a type class arrow, mostrar exemplos de utilização e linkar com a TC>}
 
