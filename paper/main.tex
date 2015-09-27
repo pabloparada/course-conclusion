@@ -407,7 +407,7 @@ class Eq a where
 	equals :: a -> a -> Bool
 \end{lstlisting}
 
-Na Listagem~\ref{lst:instance-eq}, instancia-se $Eq$ para os tipos $Int$ e $Char$. A primeira instancia declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parametro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
+Na Listagem~\ref{lst:instance-eq}, instancia-se $Eq$ para os tipos $Int$ e $Char$. A primeira instancia declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parâmetro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
 
 \begin{lstlisting}[caption={Instancias Eq\protect\footref{fnt:type-class-eq}}, style=haskell-style, label={lst:instance-eq}]
 instance Eq Int where
@@ -422,8 +422,7 @@ instance Eq Char where
 
 Com a instancia de $Eq \; Int$ é possível comparar dois inteiros tal que ${equals({1 + 1}, 2)}$ retorna $True$; ou ${equals({1 + 1}, 0)}$ retorna $False$. De maneira similar, com $Eq \; Char$ é possível comparar dois caracteres, onde ${equals('a', {'a'})}$ retorna $True$; ou ${equals('a', {'b'})}$ retorna $False$.
 
-\subsection{Classe Monad}
-
+\subsection{Monad}
 
 Para a programação funcional, mónades oferecem um contexto computacional que encapsula efeitos colaterais. Além disso, tal contexto monádico permite o encadeamento de funções que operam sob um determinado tipo. Em Haskell, esta abstração é expressa através da type class $Monad$.
 
@@ -436,11 +435,11 @@ class Monad m where
 
 Conforme a Listagem~\ref{lst:type-class-monad}, a type class $Monad$ consiste em um tipo construtor $m$ e as operações $>>=$, $>>$ e $return$. A operação $>>$ existe apenas como um facilitador para a composição de funções no contexto $m$. $>>=$ e $return$ são equivalentes as transformações naturais de multiplicação e identidade.
 
-A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é bind, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. Bind aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando um novo $Monad$ do tipo $m\;b$.
+A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é bind, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. Bind aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando uma nova instancia de $Monad$ do tipo $m\;b$.
 
 Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
 
-\begin{lstlisting}[caption={Monad - Associatividade e Identidade\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
+\begin{lstlisting}[caption={Monad - Identidade e Associatividade\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
 return a >>= k  =  k a
 m >>= return  =  m
 m >>= (\x -> k x >>= h)  =  (m >>= k) >>= h
@@ -448,7 +447,7 @@ m >>= (\x -> k x >>= h)  =  (m >>= k) >>= h
 
 A possibilidade de encadear funções com $>>=$ é tão importante que diversas linguagens funcionais oferecem suporte sintático para mónades. Em Haskell, esta sintaxe especial é chamada de \textbf{do notation}~\cite{marlow2010haskell}.
 
-\begin{lstlisting}[caption={Encadeando Funções em Monad\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:func-chaining}]
+\begin{lstlisting}[caption={Encadeando Funções com Bind e Then\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:func-chaining}]
 putStr "x: " >>
 getLine >>= \l -> 
 return (words l)
@@ -456,7 +455,7 @@ return (words l)
 
 Na Listagem~\ref{lst:func-chaining} as funções $putStr$ e $getLine$ são encadeadas pelos operadores $>>$ e $>>=$. Estas mesmas funções podem ser encadeadas utilizando a utilizando o suporte sintático de \textbf{do notation}, conforme a Listagem~\ref{lst:do-notation}.
 
-\begin{lstlisting}[caption={Do Notation\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:do-notation}]
+\begin{lstlisting}[caption={Encadeando Funções com Do Notation\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:do-notation}]
 do 
 	putStr "x: "
 	l <- getLine
@@ -466,11 +465,41 @@ do
 Com esta notação, um código pertencente ao paradigma funcional é escrito de forma imperativa, ou seja, a computação é declarada passo a passo. Assim, obtém-se uma sintaxe simplificada para expressar efeitos colaterais em linguagens puramente funcionais como Haskell.
 
 \addtocounter{footnote}{1}
-\footnotetext{Fonte: S. Marlow \textit{et al.}, Haskell 2010 Language Report, p. 25--81, 2010. Disponível em: \url{http://www.haskell.org/onlinereport/haskell2010}. Acessado em: 23/09/2015.\label{fnt:haskell-language-report}}
+\footnotetext{Fonte: S. Marlow \textit{et al.}, Haskell 2010 Language Report, p. 25--81, 2010.\label{fnt:haskell-language-report}}
 
-\subsection{Classe Arrow}
+\subsection{Arrow}
 
-\textcolor{red}{<descrever a type class arrow, mostrar exemplos de utilização e linkar com a TC>}
+Conforme o exemplo de programação tácita~\footnote{Um paradigma de programação no qual as funções não identificam seus argumentos, em vez disso as funções são construídas a partir de funções combinatórias que manipulam os argumentos.} da Listagem~\ref{lst:func-count}, Hughes~\cite{hughes2005programming} constrói uma função que conta o numero de ocorrências de uma palavra em um $String$.
+
+\begin{lstlisting}[caption={Função $count$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-count}]
+count w = length . filter (==w) . words
+\end{lstlisting}
+
+A função $count$ é implementada pela união de $length$, $filter$, $==$ e $words$. Por último mas não menos importante, a função de composição $(.)$ atua na implementação de $count$ como um operador de ligação entre as funções menores. Entretanto, funções com efeitos colaterais não são compostas tão facilmente. Não há como por exemplo utilizar $(.)$ para unir a leitura de um arquivo com $count$.
+
+\begin{lstlisting}[caption={Funções de E/S\protect\footref{fnt:prog-with-arrows}\protect\footref{fnt:prelude}}, style=haskell-style, label={lst:func-io}]
+readFile :: FilePath -> IO String
+\end{lstlisting}
+
+Conforme a Listagem~\ref{lst:func-io}, as funções de E/S retornam valores encapsulados na mónade $IO$. Estes retornos são incompatíveis, seus tipos de retorno não alinham. Assim, para permitir a composição destes tipos de funções, Hughes introduziu a type class $Arrow$.
+
+\begin{lstlisting}[caption={Funções de E/S\protect\footref{fnt:arrow-user-interface}}, style=haskell-style, label={lst:tc-arrow}]
+class Arrow a where
+	arr   :: (b -> c) -> a b c
+	(>>>) :: a b c -> a c d -> a b d
+	first :: a b c -> a (b,d) (c,d)
+\end{lstlisting}
+
+Como pode ser visto na Listagem~\ref{lst:tc-arrow}, $Arrow$ denota uma computação com os tipos de entrada $c$ e $d$ e tipos saída $b$ e $d$, um tipo construtor $a$ e as operações $arr$, $>>>$ e $first$~\cite{courtney2001genuinely}.
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: A. Courtney e E. Conal, Genuinely functional user interfaces, p. 5, 2001.\label{fnt:arrow-user-interface}}
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--74, 2005.\label{fnt:prog-with-arrows}}
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: \url{http://hackage.haskell.org/package/base-4.8.1.0/docs/Prelude.html}. Acessado em: 26/09/2015.\label{fnt:prelude}}
 
 %Apesar de parecidas, type classes não são iguais à interfaces, presentes na %orientação a objetos. Type classes expressam sobrecarga de método (polimorfismo ad-%hoc) enquanto interfaces trabalham com instâncias de classes e sobrecarga por %subtipagem.
 

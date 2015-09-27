@@ -40,3 +40,4 @@ paper/*.dvi
 paper/images/*.aux
 paper/images/*.tex.aux
 paper/images/*.dia~
+paper/images/*.log
