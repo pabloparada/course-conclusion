@@ -23,9 +23,9 @@
 % configs listings
 \renewcommand{\lstlistingname}{Listagem}
 
-\lstdefinestyle{java-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, language = Java, frame = single, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
+\lstdefinestyle{java-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, frame = none, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
 
-\lstdefinestyle{haskell-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, language = haskell, frame = single, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
+\lstdefinestyle{haskell-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, frame = none, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
 
 % configs footnotes
 \renewcommand\footnoterule{\kern-3pt \hrule width 2in \kern 2.6pt}
@@ -469,37 +469,49 @@ Com esta notação, um código pertencente ao paradigma funcional é escrito de 
 
 \subsection{Arrow}
 
-Conforme o exemplo de programação tácita~\footnote{Um paradigma de programação no qual as funções não identificam seus argumentos, em vez disso as funções são construídas a partir de funções combinatórias que manipulam os argumentos.} da Listagem~\ref{lst:func-count}, Hughes~\cite{hughes2005programming} constrói uma função que conta o numero de ocorrências de uma palavra em um $String$.
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: A. Courtney e E. Conal, Genuinely functional user interfaces, p. 5, 2001.\label{fnt:arrow-user-interface}}
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: \url{http://hackage.haskell.org/package/base-4.8.1.0/docs/Prelude.html}. Acessado em: 26/09/2015.\label{fnt:prelude}}
+
+Conforme o exemplo de programação tácita~\footnote{Um paradigma de programação no qual as funções não identificam seus argumentos, em vez disso são construídas a partir de funções combinatórias que manipulam os argumentos.} da Listagem~\ref{lst:func-count}, Hughes~\cite{hughes2005programming} constrói uma função que conta o numero de ocorrências de uma palavra em um $String$.
 
 \begin{lstlisting}[caption={Função $count$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-count}]
 count w = length . filter (==w) . words
 \end{lstlisting}
 
-A função $count$ é implementada pela união de $length$, $filter$, $==$ e $words$. Por último mas não menos importante, a função de composição $(.)$ atua na implementação de $count$ como um operador de ligação entre as funções menores. Entretanto, funções com efeitos colaterais não são compostas tão facilmente. Não há como por exemplo utilizar $(.)$ para unir a leitura de um arquivo com $count$.
+A função $count$ é implementada pela união de $length$, $filter$, $==$ e $words$. Por último mas não menos importante, a função de composição $(.)$ atua na implementação de $count$ como um operador de ligação entre as funções menores. Entretanto, funções com efeitos colaterais não são compostas tão facilmente. 
+Conforme a Listagem~\ref{lst:func-io}, $readFile$ retorna um $String$ encapsulado pela mónade $IO$. Em contrapartida, $count$ espera um $String$ como argumento, não um tipo construtor $m$.
 
 \begin{lstlisting}[caption={Funções de E/S\protect\footref{fnt:prog-with-arrows}\protect\footref{fnt:prelude}}, style=haskell-style, label={lst:func-io}]
 readFile :: FilePath -> IO String
 \end{lstlisting}
 
-Conforme a Listagem~\ref{lst:func-io}, as funções de E/S retornam valores encapsulados na mónade $IO$. Estes retornos são incompatíveis, seus tipos de retorno não alinham. Assim, para permitir a composição destes tipos de funções, Hughes introduziu a type class $Arrow$.
+Não há como por exemplo utilizar $(.)$ para unir $readFile$ e $count$, ou seja, não é possível ler um arquivo do disco e contar a ocorrência de uma determinada palavra. Entretanto, a união destas é desejável. Sendo assim, para permitir a composição destes tipos de funções, Hughes introduziu a type class $Arrow$. Na Listagem~\ref{lst:tc-arrow}, $Arrow$ denota uma computação pelos tipos $b$, $c$ e $d$, um tipo construtor $a$ e as operações $arr$ e $>>>$. 
 
-\begin{lstlisting}[caption={Funções de E/S\protect\footref{fnt:arrow-user-interface}}, style=haskell-style, label={lst:tc-arrow}]
+\begin{lstlisting}[caption={Type class Arrow\protect\footref{fnt:arrow-user-interface}}, style=haskell-style, label={lst:tc-arrow}]
 class Arrow a where
 	arr   :: (b -> c) -> a b c
 	(>>>) :: a b c -> a c d -> a b d
-	first :: a b c -> a (b,d) (c,d)
 \end{lstlisting}
 
-Como pode ser visto na Listagem~\ref{lst:tc-arrow}, $Arrow$ denota uma computação com os tipos de entrada $c$ e $d$ e tipos saída $b$ e $d$, um tipo construtor $a$ e as operações $arr$, $>>>$ e $first$~\cite{courtney2001genuinely}.
+Destas, a mais comum é $arr$, declarada com a assinatura ${(b \rightarrow c) \rightarrow a\;b\;c}$. Dada qualquer função com entrada $b$ e saída $c$, $arr\;f$ constrói uma instância de $Arrow$ de $f$~\cite{courtney2001genuinely}. 
+
+A segunda operação é definida simbolicamente por $(>>>)$ com assinatura ${a\;b\;c \rightarrow a\;c\;d \rightarrow a\;b\;d}$. Recebe como argumento uma instância definida por ${a\;c\;d}$ e retorna $a\;b\;d$. Logo, $>>>$ aplica sequencialmente as funções passadas para $arr$, gerando uma computação de entrada $b$ e saída $d$.
+
+Por exemplo, $arr$ na instancia $(\rightarrow)$ da Listagem~\ref{lst:func-comp-arrow} é implementada pela função de identidade $id$. Já $(>>>)$ utiliza a composição de funções $(.)$ e a função $flip$~\cite{hughes2005programming}.
+
+\begin{lstlisting}[caption={Arrow - Composição de Funções\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-comp-arrow}]
+instance Arrow (->) where
+	arr   = id
+	(>>>) = flip (.)
+\end{lstlisting}
+
+Assim, define-se um tipo $Arrow\;(\rightarrow)$ capaz operar sob funções ordinárias do tipo $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
 
 \addtocounter{footnote}{1}
-\footnotetext{Fonte: A. Courtney e E. Conal, Genuinely functional user interfaces, p. 5, 2001.\label{fnt:arrow-user-interface}}
-
-\addtocounter{footnote}{1}
-\footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--74, 2005.\label{fnt:prog-with-arrows}}
-
-\addtocounter{footnote}{1}
-\footnotetext{Fonte: \url{http://hackage.haskell.org/package/base-4.8.1.0/docs/Prelude.html}. Acessado em: 26/09/2015.\label{fnt:prelude}}
+\footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--79, 2005.\label{fnt:prog-with-arrows}}
 
 %Apesar de parecidas, type classes não são iguais à interfaces, presentes na %orientação a objetos. Type classes expressam sobrecarga de método (polimorfismo ad-%hoc) enquanto interfaces trabalham com instâncias de classes e sobrecarga por %subtipagem.
 
