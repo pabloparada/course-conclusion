@@ -35,7 +35,7 @@
 
 \title { 
 	Teoria das Categorias \\
-	Flechas e Mónades \\
+	Mónades e Flechas \\
 	em Java 
 }
 
@@ -439,10 +439,10 @@ A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorn
 
 Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
 
-\begin{lstlisting}[caption={Monad - Identidade e Associatividade\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
-return a >>= k  =  k a
-m >>= return  =  m
-m >>= (\x -> k x >>= h)  =  (m >>= k) >>= h
+\begin{lstlisting}[caption={Leis para Monad\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
+return a >>= k = k a
+m >>= return = m
+m >>= (\x -> k x >>= h) = (m >>= k) >>= h
 \end{lstlisting}
 
 A possibilidade de encadear funções com $>>=$ é tão importante que diversas linguagens funcionais oferecem suporte sintático para mónades. Em Haskell, esta sintaxe especial é chamada de \textbf{do notation}~\cite{marlow2010haskell}.
@@ -498,20 +498,50 @@ class Arrow a where
 
 Destas, a mais comum é $arr$, declarada com a assinatura ${(b \rightarrow c) \rightarrow a\;b\;c}$. Dada qualquer função com entrada $b$ e saída $c$, $arr\;f$ constrói uma instância de $Arrow$ de $f$~\cite{courtney2001genuinely}. 
 
-A segunda operação é definida simbolicamente por $(>>>)$ com assinatura ${a\;b\;c \rightarrow a\;c\;d \rightarrow a\;b\;d}$. Recebe como argumento uma instância definida por ${a\;c\;d}$ e retorna $a\;b\;d$. Logo, $>>>$ aplica sequencialmente as funções passadas para $arr$, gerando uma computação de entrada $b$ e saída $d$.
+A segunda operação é definida simbolicamente por $(>>>)$ com assinatura ${a\;b\;c \rightarrow a\;c\;d \rightarrow a\;b\;d}$. Recebe como argumento uma instância definida por ${a\;c\;d}$ e retorna $a\;b\;d$. Logo, $(>>>)$ aplica sequencialmente as funções passadas para $arr$, gerando uma computação de entrada $b$ e saída $d$ encapsuladas em uma instância de $Arrow$.
 
-Por exemplo, $arr$ na instancia $(\rightarrow)$ da Listagem~\ref{lst:func-comp-arrow} é implementada pela função de identidade $id$. Já $(>>>)$ utiliza a composição de funções $(.)$ e a função $flip$~\cite{hughes2005programming}.
+Tem-se na Listagem~\ref{lst:func-comp-arrow} uma instancia de $Arrow$ que fornece a composição de funções ordinárias. Nesta, $arr$ é implementada pela função de identidade $id$, disponível no pacote $Prelude$. Na operação de composição, denotada simbolicamente por $(>>>)$, utiliza-se $(.)$ e $flip$~\cite{hughes2005programming}. Assim, define-se o tipo $Arrow\;(\rightarrow)$,  capaz de denotar funções ordinárias. Sua assinatura é dada por $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
 
 \begin{lstlisting}[caption={Arrow - Composição de Funções\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-comp-arrow}]
 instance Arrow (->) where
 	arr   = id
 	(>>>) = flip (.)
+\end{lstlisting} 
+
+Além disso, a definição do tipo $Kleisli$ para $Arrow$ na Listagem~\ref{lst:kleisli-type} e~\ref{lst:kleisli-arrow} provê a composição de mónades. Os tipos de entrada e saída são definidos explicitamente em $Kleisli$, diferentemente de $Monad$. Portanto, ${Arrow\;(Kleisli\;m)}$ generalizam mónades\cite{hughes2005programming}.
+
+\begin{lstlisting}[caption={Definição do tipo $Kleisli$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:kleisli-type}]
+newtype Kleisli m a b = Kleisli { 
+	runKleisli :: a -> m b 
+}
 \end{lstlisting}
 
-Assim, define-se um tipo $Arrow\;(\rightarrow)$ capaz operar sob funções ordinárias do tipo $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
+
+\begin{lstlisting}[caption={Instância para $Monad$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:kleisli-arrow}]
+instance Monad m => Arrow (Kleisli m) where
+	...
+	first (Kleisli f) = Kleisli (\(a,c) -> 
+									do b <- f a
+									   return (b,c))
+\end{lstlisting}
+
+Apesar de possuir nove axiomas, na Listagem~\ref{lst:arrow-law} estão listados apenas os necessários para as operações de composição e identidade~\cite{lindley2011idioms}.
+
+\begin{lstlisting}[caption={Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, style=haskell-style, label={lst:arrow-law}]
+arr id >>> f = f
+f >>> arr id = f
+(f >>> g) >>> h = f >>> (g >>> h)
+arr (g . f) = arr f >>> arr g
+...
+\end{lstlisting}
+
+\section{Mónades em Java}
 
 \addtocounter{footnote}{1}
-\footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--79, 2005.\label{fnt:prog-with-arrows}}
+\footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--81, 2005.\label{fnt:prog-with-arrows}}
+
+\addtocounter{footnote}{1}
+\footnotetext{Fonte: S. Lindley e P. Wadler, Idioms are oblivious, arrows are meticulous, monads are promiscuous, p. 97--98, 2011.\label{fnt:arrows-and-idioms}}
 
 %Apesar de parecidas, type classes não são iguais à interfaces, presentes na %orientação a objetos. Type classes expressam sobrecarga de método (polimorfismo ad-%hoc) enquanto interfaces trabalham com instâncias de classes e sobrecarga por %subtipagem.
 
