@@ -439,7 +439,7 @@ A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorn
 
 Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
 
-\begin{lstlisting}[caption={Leis para Monad\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
+\begin{lstlisting}[caption={Leis para $Monad$\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
 return a >>= k = k a
 m >>= return = m
 m >>= (\x -> k x >>= h) = (m >>= k) >>= h
@@ -490,17 +490,17 @@ readFile :: FilePath -> IO String
 
 Não há como por exemplo utilizar $(.)$ para unir $readFile$ e $count$, ou seja, não é possível ler um arquivo do disco e contar a ocorrência de uma determinada palavra. Entretanto, a união destas é desejável. Sendo assim, para permitir a composição destes tipos de funções, Hughes introduziu a type class $Arrow$. Na Listagem~\ref{lst:tc-arrow}, $Arrow$ denota uma computação pelos tipos $b$, $c$ e $d$, um tipo construtor $a$ e as operações $arr$ e $>>>$. 
 
-\begin{lstlisting}[caption={Type class Arrow\protect\footref{fnt:arrow-user-interface}}, style=haskell-style, label={lst:tc-arrow}]
+\begin{lstlisting}[caption={Type class $Arrow$\protect\footref{fnt:arrow-user-interface}}, style=haskell-style, label={lst:tc-arrow}]
 class Arrow a where
 	arr   :: (b -> c) -> a b c
 	(>>>) :: a b c -> a c d -> a b d
 \end{lstlisting}
 
-Destas, a mais comum é $arr$, declarada com a assinatura ${(b \rightarrow c) \rightarrow a\;b\;c}$. Dada qualquer função com entrada $b$ e saída $c$, $arr\;f$ constrói uma instância de $Arrow$ de $f$~\cite{courtney2001genuinely}. 
+Destas, a mais comum é $arr$, declarada com a assinatura ${(b \rightarrow c) \rightarrow a\;b\;c}$. Dada qualquer função com entrada $b$ e saída $c$, $arr\;f$ constrói uma instância de $Arrow$ a partir de $f$~\cite{courtney2001genuinely}. 
 
 A segunda operação é definida simbolicamente por $(>>>)$ com assinatura ${a\;b\;c \rightarrow a\;c\;d \rightarrow a\;b\;d}$. Recebe como argumento uma instância definida por ${a\;c\;d}$ e retorna $a\;b\;d$. Logo, $(>>>)$ aplica sequencialmente as funções passadas para $arr$, gerando uma computação de entrada $b$ e saída $d$ encapsuladas em uma instância de $Arrow$.
 
-Tem-se na Listagem~\ref{lst:func-comp-arrow} uma instancia de $Arrow$ que fornece a composição de funções ordinárias. Nesta, $arr$ é implementada pela função de identidade $id$, disponível no pacote $Prelude$. Na operação de composição, denotada simbolicamente por $(>>>)$, utiliza-se $(.)$ e $flip$~\cite{hughes2005programming}. Assim, define-se o tipo $Arrow\;(\rightarrow)$,  capaz de denotar funções ordinárias. Sua assinatura é dada por $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
+Tem-se na Listagem~\ref{lst:func-comp-arrow} uma instancia de $Arrow$ que fornece a composição de funções ordinárias. Nesta, $arr$ é implementada pela função de identidade $id$, disponível no pacote $Prelude$. Na operação de composição $(>>>)$, utiliza-se $(.)$ e $flip$~\cite{hughes2005programming}. Assim, define-se o tipo ${Arrow\;(\rightarrow)}$,  instancia de $Arrow$ para funções ordinárias. Sua assinatura é dada por $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
 
 \begin{lstlisting}[caption={Arrow - Composição de Funções\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-comp-arrow}]
 instance Arrow (->) where
@@ -508,7 +508,7 @@ instance Arrow (->) where
 	(>>>) = flip (.)
 \end{lstlisting} 
 
-Além disso, a definição do tipo $Kleisli$ para $Arrow$ na Listagem~\ref{lst:kleisli-type} e~\ref{lst:kleisli-arrow} provê a composição de mónades. Os tipos de entrada e saída são definidos explicitamente em $Kleisli$, diferentemente de $Monad$. Portanto, ${Arrow\;(Kleisli\;m)}$ generalizam mónades\cite{hughes2005programming}.
+Além disso, a definição do tipo $Kleisli$ para $Arrow$ na Listagem~\ref{lst:kleisli-type} e~\ref{lst:kleisli-arrow} provê a composição de mónades. Os tipos de entrada e saída são definidos explicitamente em $Kleisli$, diferentemente de $Monad$. Portanto, ${Arrow\;(Kleisli\;m)}$ generaliza $Monad$~\cite{hughes2005programming}.
 
 \begin{lstlisting}[caption={Definição do tipo $Kleisli$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:kleisli-type}]
 newtype Kleisli m a b = Kleisli { 
@@ -536,6 +536,11 @@ arr (g . f) = arr f >>> arr g
 \end{lstlisting}
 
 \section{Mónades em Java}
+
+A linguagem Java originou-se a partir de um projeto de pesquisa, tendo como
+objetivo de desenvolver uma plataforma capaz de operar em tempo real. Em sua criação, decisões arquiteturais e de design foram embasadas em linguagens como SmallTalk, Eifell, Objective C e Cedar/Mesa~\cite{gosling1995java}. Para ser considerada uma linguagem orientada a objetos, Java suporta encapsulamento, polimorfismo e herança desde sua elaboração.
+
+Em sua quinta versão, tendo como base o trabalho de~\cite{bracha1998making} Java conta com tipos genéricos. “Tipos genéricos permitem abstrações sobre tipos”~\cite{bracha2004generics}. A abstração de tipos nos permite utilizar tipos parametrizáveis, generalizando implementações de interfaces, classes e métodos. Com isto, o compilador é capaz de checar os tipos em tempo de compilação, evitando erros em tempo de execução e casts excessivos.
 
 \addtocounter{footnote}{1}
 \footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--81, 2005.\label{fnt:prog-with-arrows}}
