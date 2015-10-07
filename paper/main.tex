@@ -540,13 +540,52 @@ arr (g . f) = arr f >>> arr g
 A linguagem Java originou-se a partir de um projeto de pesquisa, tendo como
 objetivo de desenvolver uma plataforma capaz de operar em tempo real. Em sua criação, decisões arquiteturais e de design foram embasadas em linguagens como SmallTalk, Eifell, Objective C e Cedar/Mesa~\cite{gosling1995java}. Para ser considerada uma linguagem orientada a objetos, Java suporta encapsulamento, polimorfismo e herança desde sua elaboração.
 
-Em sua quinta versão, tendo como base o trabalho de~\cite{bracha1998making} Java conta com tipos genéricos. “Tipos genéricos permitem abstrações sobre tipos”~\cite{bracha2004generics}. A abstração de tipos nos permite utilizar tipos parametrizáveis, generalizando implementações de interfaces, classes e métodos. Com isto, o compilador é capaz de checar os tipos em tempo de compilação, evitando erros em tempo de execução e casts excessivos.
+Desde sua quinta versão, tendo como base o trabalho de Bracha \textit{et al.}~\cite{bracha2004generics, bracha1998making}, Java conta com tipos genéricos. A abstração de tipos nos permite utilizar tipos parametrizáveis, generalizando implementações de interfaces, classes e métodos. Com isto o compilador é capaz de checar os tipos em tempo de compilação, evitando erros de conversão e em tempo de execução.
 
 \addtocounter{footnote}{1}
 \footnotetext{Fonte: J. Hughes, Programming with Arrows, p. 73--81, 2005.\label{fnt:prog-with-arrows}}
 
 \addtocounter{footnote}{1}
 \footnotetext{Fonte: S. Lindley e P. Wadler, Idioms are oblivious, arrows are meticulous, monads are promiscuous, p. 97--98, 2011.\label{fnt:arrows-and-idioms}}
+
+Recentemente obteve-se o suporte a funções anônimas. Estas foram adicionadas a partir do Lambda Project~\cite{jsr335}, na versão 8 da JDK. Esta funcionalidade é essencial para a implementação de um contrato monádico, pois acrescenta características equivalentes as já existentes em linguagens como Haskell. Logo, contando com as funcionalidades já citadas e as recém adicionadas na plataforma, Java é capaz de fornecer suporte a mónades e flechas.
+
+\subsection{Problema dos Tipos Construtores}
+
+Para a construção da interface monádica, precisa-se primeiro eliminar algumas das inconsistências da linguagem. Todo mónade opera sob o tipo construtor ${M\!\!\!<\!\!\!A\!\!>}$. Logo, a declaração abaixo é suficientemente capaz de satisfazer as necessidades de um contrato monádico .
+
+\begin{lstlisting}[caption={Interface Monad\protect\footref{fnt:arrows-and-idioms}}, style=haskell-style, label={lst:arrow-law}]
+public interface Monad<M<A>> {}
+\end{lstlisting}
+
+Entretanto, o compilador não suporta a sintaxe ${M\!\!\!<\!\!\!A\!\!>}$. Tipos genéricos não são capazes de expressar tipos construtores. Portanto, para expressar esta interface faz-se necessário a implementação de $Kind$.
+
+\begin{lstlisting}[caption={Interface Kind}, style=haskell-style, label={lst:kind-interface}]
+public interface Kind<A, _ extends Kind<?, _>> {}
+\end{lstlisting}
+
+Conforme a Listagem~\ref{lst:kind-interface}, $Kind$ é capaz de simular tipos construtores parcialmente.
+
+Afim de simular tipos construtores, fez-se necessária a construção da interface $Kind$. Apesar da assinatura confusa, esta interface define dois tipos genéricos. São eles:
+
+\begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
+	\item $A$ tomando como exemplo o tipo construtor invalido ${M<B>}$, este primeiro parâmetro genérico eh equivalente ao valor encapsulado $B$ nesta declaração.
+	\item $\textunderscore$ tal parâmetro unifica A e M, ou seja, determina uma restrição na qual $\textunderscore$ herda $Kind$ e parametriza este com um tipo curinga e o próprio $\textunderscore$ que representa M.
+\end{enumerate}
+
+Apesar de impor uma restrição hierárquica entre os tipos genéricos em sua declaração, $Kind$ consegue simular tipos construtores em algumas funções. Com a nova inferência de tipos do compilador Java, esta interface garante 
+
+\begin{lstlisting}[caption={Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, style=haskell-style, label={lst:arrow-law}]
+public interface Monad<A, M extends Kind<?, M>> extends Functor<A>, Kind<A, M> {
+
+    <B, MB extends Kind<B, M>> Monad<B, M> flatMap(Function<? super A, MB> f);
+
+    @Override
+    <B> Monad<B, M> map(Function<? super A, ? extends B> f);
+}
+\end{lstlisting}
+
+interface Monad [listagem monad] foi utilizada para representar a type class da listagem x. Ambas, type class e interfaces, nomeiam e descrevem um conjunto de operações, a partir de entradas e saídas. Contudo, estas diferenciam entre si, pois uma type class limita o comportamento de um tipo enquanto uma interface limita o comportamento de uma classe. Além disso, para definir o contrato monádico eh necessário declarar também o contrato de functor, visto que todo monad é um functor.
 
 %Apesar de parecidas, type classes não são iguais à interfaces, presentes na %orientação a objetos. Type classes expressam sobrecarga de método (polimorfismo ad-%hoc) enquanto interfaces trabalham com instâncias de classes e sobrecarga por %subtipagem.
 
