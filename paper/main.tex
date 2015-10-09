@@ -552,26 +552,27 @@ Recentemente obteve-se o suporte a funções anônimas. Estas foram adicionadas 
 
 \subsection{Problema dos Tipos Construtores}
 
-Para a construção da interface monádica, precisa-se primeiro eliminar algumas das inconsistências da linguagem. Todo mónade opera sob o tipo construtor ${M\!\!\!<\!\!\!A\!\!>}$. Logo, a declaração abaixo é suficientemente capaz de satisfazer as necessidades de um contrato monádico .
+Construtores de classe constroem objetos, respectivamente, tipos construtores constroem tipos. Tipos construtores possuem aridade, ou seja, recebem tipos como argumento~\cite{pierce2002types}. Se um tipo construtor não receber argumentos, este é chamado de tipo construtor nulário. Um tipo qualquer $A$ origina-se a partir de um construtor nulário, assim como um tipo $C(A)$ é aplicado para construtores de aridade $n$.
 
-\begin{lstlisting}[caption={Interface Monad\protect\footref{fnt:arrows-and-idioms}}, style=haskell-style, label={lst:arrow-law}]
+Tipos genéricos são equivalentes a construtores unários, incapazes de representar tipos construtores com aridade $n$. Tendo como exemplo o mesmo tipo $C(A)$ anterior, este poderia ser expresso por genéricos se $C$ fosse estaticamente definido. Portanto, para qualquer $C$ definido estaticamente como $List$, $Set$, $Queue$, $Map$, e assim em diante, é possível parametrizar $A$ com genéricos.
+
+
+Entretanto, para a construção da interface monádica é necessário expressar um tipo construtor de aridade $n$. A declaração de um tipo $Monad(M(A))$ utilizando tipos genéricos é inválida, ocasiona um erro em tempo de compilação. Logo, a declaração de interface abaixo não pode ser expressa na linguagem.
+
+\begin{lstlisting}[caption={Interface Monad inválida}, style=haskell-style, label={lst:invalid-generic-monad}]
 public interface Monad<M<A>> {}
 \end{lstlisting}
 
-Entretanto, o compilador não suporta a sintaxe ${M\!\!\!<\!\!\!A\!\!>}$. Tipos genéricos não são capazes de expressar tipos construtores. Portanto, para expressar esta interface faz-se necessário a implementação de $Kind$.
-
-\begin{lstlisting}[caption={Interface Kind}, style=haskell-style, label={lst:kind-interface}]
-public interface Kind<A, _ extends Kind<?, _>> {}
-\end{lstlisting}
-
-Conforme a Listagem~\ref{lst:kind-interface}, $Kind$ é capaz de simular tipos construtores parcialmente.
-
-Afim de simular tipos construtores, fez-se necessária a construção da interface $Kind$. Apesar da assinatura confusa, esta interface define dois tipos genéricos. São eles:
+Afim de solucionar esta inconsistência, na Listagem~\ref{lst:kind-interface} propõe-se o tipo $Kind(A, K)$. Sendo capaz de simular tipos construtores, este possui os parâmetros de tipo genérico $A$ e $K$.
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
-	\item $A$ tomando como exemplo o tipo construtor invalido ${M<B>}$, este primeiro parâmetro genérico eh equivalente ao valor encapsulado $B$ nesta declaração.
-	\item $\textunderscore$ tal parâmetro unifica A e M, ou seja, determina uma restrição na qual $\textunderscore$ herda $Kind$ e parametriza este com um tipo curinga e o próprio $\textunderscore$ que representa M.
+	\item ($A$) tomando como exemplo o tipo construtor invalido $Monad(M(A))$, este primeiro parâmetro genérico é equivalente ao valor encapsulado $A$ nesta declaração.
+	\item ($K$) tal parâmetro unifica A e M, ou seja, determina uma restrição na qual $K$ herda $Kind$ e parametriza este com um tipo curinga e o próprio $K$ que representa $Kind$.
 \end{enumerate}
+
+\begin{lstlisting}[caption={Interface Kind}, style=haskell-style, label={lst:kind-interface}]
+public interface Kind<A, K extends Kind<?, K>> {}
+\end{lstlisting}
 
 Apesar de impor uma restrição hierárquica entre os tipos genéricos em sua declaração, $Kind$ consegue simular tipos construtores em algumas funções. Com a nova inferência de tipos do compilador Java, esta interface garante 
 
