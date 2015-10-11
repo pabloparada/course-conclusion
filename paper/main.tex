@@ -23,9 +23,25 @@
 % configs listings
 \renewcommand{\lstlistingname}{Listagem}
 
-\lstdefinestyle{java-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, frame = none, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
-
-\lstdefinestyle{haskell-style}{basicstyle = \footnotesize\tt, breakatwhitespace = true, breaklines = true, captionpos = b, extendedchars = true, frame = none, keywordstyle = \bf, showspaces = false, showstringspaces = false, showtabs = false, tabsize = 2, abovecaptionskip = 1em, belowcaptionskip = 1em, aboveskip = 2em,     belowskip = 5pt, xleftmargin = 5pt, xrightmargin = 5pt}
+\lstset{
+	basicstyle = \footnotesize\tt, 
+	breakatwhitespace = true, 
+	breaklines = true, 
+	captionpos = b, 
+	extendedchars = true,
+	keywordstyle = \bf, 
+	showspaces = false, 
+	showstringspaces = false, 
+	showtabs = false, 
+	tabsize = 2, 
+	abovecaptionskip = 1em, 
+	belowcaptionskip = 1em, 
+	aboveskip = 2em,     
+	belowskip = 5pt, 
+	xleftmargin = 5pt, 
+	xrightmargin = 5pt,
+	frame = single
+}
 
 % configs footnotes
 \renewcommand\footnoterule{\kern-3pt \hrule width 2in \kern 2.6pt}
@@ -89,7 +105,7 @@ Na última década muitos dos problemas encontrados -- como enviar não só dado
 \subsection{Lambda Expressions e Anonymous Inner Classes}
 Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a Listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
 
-\begin{lstlisting}[caption={Sort - Anonymous Inner Class}, style = java-style, label={lst:array-aic-sort}]
+\begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
 Integer[] integers = new Integer[]{5, 4, 3, 2, 1};
 
 Arrays.sort(integers, new Comparator<Integer>() {
@@ -103,7 +119,7 @@ Neste trecho de código o método $sort$ recebe como primeiro argumento um array
 
 Entretanto, com closures o mesmo método $sort$ pode ter seus argumentos simplificados. Conforme demonstrado na Listagem~\ref{lst:array-lambda-sort}, ao invés de instanciar uma AIC, uma lambda expression é passada como segundo argumento, removendo a necessidade de instanciação de uma classe e a implementação de um contrato imposto por $Comparator$.
 
-\begin{lstlisting}[caption={Sort - Lambda Expression}, style = java-style, label={lst:array-lambda-sort}]
+\begin{lstlisting}[caption={Sort - Lambda Expression}, label={lst:array-lambda-sort}]
 Arrays.sort(integers, (a, b) -> a.compareTo(b));
 \end{lstlisting}
 
@@ -402,14 +418,14 @@ Conforme a Typeclassopedia~\cite{web2015typeclassopedia}, a Figura~\ref{fig:type
 
 A implementação de uma type class pode ser visualizada na Listagem~\ref{lst:type-class-eq}, onde a primeira declaração incorpora uma nova classe com nome $Eq$, uma variável de tipo $a$ e um comportamento explicitado pela função $equals$. 
 
-\begin{lstlisting}[caption={Type class Eq\protect\footref{fnt:type-class-eq}}, style=haskell-style, label={lst:type-class-eq}]
+\begin{lstlisting}[caption={Type class Eq\protect\footref{fnt:type-class-eq}}, label={lst:type-class-eq}]
 class Eq a where
 	equals :: a -> a -> Bool
 \end{lstlisting}
 
 Na Listagem~\ref{lst:instance-eq}, instancia-se $Eq$ para os tipos $Int$ e $Char$. A primeira instancia declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parâmetro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
 
-\begin{lstlisting}[caption={Instancias Eq\protect\footref{fnt:type-class-eq}}, style=haskell-style, label={lst:instance-eq}]
+\begin{lstlisting}[caption={Instancias Eq\protect\footref{fnt:type-class-eq}}, label={lst:instance-eq}]
 instance Eq Int where
 	equals = primEqInt
 	
@@ -426,7 +442,7 @@ Com a instancia de $Eq \; Int$ é possível comparar dois inteiros tal que ${equ
 
 Para a programação funcional, mónades oferecem um contexto computacional que encapsula efeitos colaterais. Além disso, tal contexto monádico permite o encadeamento de funções que operam sob um determinado tipo. Em Haskell, esta abstração é expressa através da type class $Monad$.
 
-\begin{lstlisting}[caption={Type class Monad\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:type-class-monad}]
+\begin{lstlisting}[caption={Type class Monad\protect\footref{fnt:haskell-language-report}}, label={lst:type-class-monad}]
 class Monad m where
 	(>>=)  :: m a -> (a -> m b) -> m b
 	(>>)   :: (>>) m a -> m b -> m b
@@ -439,7 +455,7 @@ A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorn
 
 Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
 
-\begin{lstlisting}[caption={Leis para $Monad$\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:monad-laws}]
+\begin{lstlisting}[caption={Leis para $Monad$\protect\footref{fnt:haskell-language-report}}, label={lst:monad-laws}]
 return a >>= k = k a
 m >>= return = m
 m >>= (\x -> k x >>= h) = (m >>= k) >>= h
@@ -447,7 +463,7 @@ m >>= (\x -> k x >>= h) = (m >>= k) >>= h
 
 A possibilidade de encadear funções com $>>=$ é tão importante que diversas linguagens funcionais oferecem suporte sintático para mónades. Em Haskell, esta sintaxe especial é chamada de \textbf{do notation}~\cite{marlow2010haskell}.
 
-\begin{lstlisting}[caption={Encadeando Funções com Bind e Then\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:func-chaining}]
+\begin{lstlisting}[caption={Encadeando Funções com Bind e Then\protect\footref{fnt:haskell-language-report}}, label={lst:func-chaining}]
 putStr "x: " >>
 getLine >>= \l -> 
 return (words l)
@@ -455,7 +471,7 @@ return (words l)
 
 Na Listagem~\ref{lst:func-chaining} as funções $putStr$ e $getLine$ são encadeadas pelos operadores $>>$ e $>>=$. Estas mesmas funções podem ser encadeadas utilizando a utilizando o suporte sintático de \textbf{do notation}, conforme a Listagem~\ref{lst:do-notation}.
 
-\begin{lstlisting}[caption={Encadeando Funções com Do Notation\protect\footref{fnt:haskell-language-report}}, style=haskell-style, label={lst:do-notation}]
+\begin{lstlisting}[caption={Encadeando Funções com Do Notation\protect\footref{fnt:haskell-language-report}}, label={lst:do-notation}]
 do 
 	putStr "x: "
 	l <- getLine
@@ -477,20 +493,20 @@ Com esta notação, um código pertencente ao paradigma funcional é escrito de 
 
 Conforme o exemplo de programação tácita~\footnote{Um paradigma de programação no qual as funções não identificam seus argumentos, em vez disso são construídas a partir de funções combinatórias que manipulam os argumentos.} da Listagem~\ref{lst:func-count}, Hughes~\cite{hughes2005programming} constrói uma função que conta o numero de ocorrências de uma palavra em um $String$.
 
-\begin{lstlisting}[caption={Função $count$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-count}]
+\begin{lstlisting}[caption={Função $count$\protect\footref{fnt:prog-with-arrows}}, label={lst:func-count}]
 count w = length . filter (==w) . words
 \end{lstlisting}
 
 A função $count$ é implementada pela união de $length$, $filter$, $==$ e $words$. Por último mas não menos importante, a função de composição $(.)$ atua na implementação de $count$ como um operador de ligação entre as funções menores. Entretanto, funções com efeitos colaterais não são compostas tão facilmente. 
 Conforme a Listagem~\ref{lst:func-io}, $readFile$ retorna um $String$ encapsulado pela mónade $IO$. Em contrapartida, $count$ espera um $String$ como argumento, não um tipo construtor $m$.
 
-\begin{lstlisting}[caption={Funções de E/S\protect\footref{fnt:prog-with-arrows}\protect\footref{fnt:prelude}}, style=haskell-style, label={lst:func-io}]
+\begin{lstlisting}[caption={Funções de E/S\protect\footref{fnt:prog-with-arrows}\protect\footref{fnt:prelude}}, label={lst:func-io}]
 readFile :: FilePath -> IO String
 \end{lstlisting}
 
 Não há como por exemplo utilizar $(.)$ para unir $readFile$ e $count$, ou seja, não é possível ler um arquivo do disco e contar a ocorrência de uma determinada palavra. Entretanto, a união destas é desejável. Sendo assim, para permitir a composição destes tipos de funções, Hughes introduziu a type class $Arrow$. Na Listagem~\ref{lst:tc-arrow}, $Arrow$ denota uma computação pelos tipos $b$, $c$ e $d$, um tipo construtor $a$ e as operações $arr$ e $>>>$. 
 
-\begin{lstlisting}[caption={Type class $Arrow$\protect\footref{fnt:arrow-user-interface}}, style=haskell-style, label={lst:tc-arrow}]
+\begin{lstlisting}[caption={Type class $Arrow$\protect\footref{fnt:arrow-user-interface}}, label={lst:tc-arrow}]
 class Arrow a where
 	arr   :: (b -> c) -> a b c
 	(>>>) :: a b c -> a c d -> a b d
@@ -502,7 +518,7 @@ A segunda operação é definida simbolicamente por $(>>>)$ com assinatura ${a\;
 
 Tem-se na Listagem~\ref{lst:func-comp-arrow} uma instancia de $Arrow$ que fornece a composição de funções ordinárias. Nesta, $arr$ é implementada pela função de identidade $id$, disponível no pacote $Prelude$. Na operação de composição $(>>>)$, utiliza-se $(.)$ e $flip$~\cite{hughes2005programming}. Assim, define-se o tipo ${Arrow\;(\rightarrow)}$,  instancia de $Arrow$ para funções ordinárias. Sua assinatura é dada por $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
 
-\begin{lstlisting}[caption={Arrow - Composição de Funções\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:func-comp-arrow}]
+\begin{lstlisting}[caption={Arrow - Composição de Funções\protect\footref{fnt:prog-with-arrows}}, label={lst:func-comp-arrow}]
 instance Arrow (->) where
 	arr   = id
 	(>>>) = flip (.)
@@ -510,14 +526,14 @@ instance Arrow (->) where
 
 Além disso, a definição do tipo $Kleisli$ para $Arrow$ na Listagem~\ref{lst:kleisli-type} e~\ref{lst:kleisli-arrow} provê a composição de mónades. Os tipos de entrada e saída são definidos explicitamente em $Kleisli$, diferentemente de $Monad$. Portanto, ${Arrow\;(Kleisli\;m)}$ generaliza $Monad$~\cite{hughes2005programming}.
 
-\begin{lstlisting}[caption={Definição do tipo $Kleisli$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:kleisli-type}]
+\begin{lstlisting}[caption={Definição do tipo $Kleisli$\protect\footref{fnt:prog-with-arrows}}, label={lst:kleisli-type}]
 newtype Kleisli m a b = Kleisli { 
 	runKleisli :: a -> m b 
 }
 \end{lstlisting}
 
 
-\begin{lstlisting}[caption={Instância para $Monad$\protect\footref{fnt:prog-with-arrows}}, style=haskell-style, label={lst:kleisli-arrow}]
+\begin{lstlisting}[caption={Instância para $Monad$\protect\footref{fnt:prog-with-arrows}}, label={lst:kleisli-arrow}]
 instance Monad m => Arrow (Kleisli m) where
 	...
 	first (Kleisli f) = Kleisli (\(a,c) -> 
@@ -527,7 +543,7 @@ instance Monad m => Arrow (Kleisli m) where
 
 Apesar de possuir nove axiomas, na Listagem~\ref{lst:arrow-law} estão listados apenas os necessários para as operações de composição e identidade~\cite{lindley2011idioms}.
 
-\begin{lstlisting}[caption={Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, style=haskell-style, label={lst:arrow-law}]
+\begin{lstlisting}[caption={Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, label={lst:arrow-law}]
 arr id >>> f = f
 f >>> arr id = f
 (f >>> g) >>> h = f >>> (g >>> h)
@@ -535,7 +551,7 @@ arr (g . f) = arr f >>> arr g
 ...
 \end{lstlisting}
 
-\section{Mónades em Java}
+\section{Aplicação em Java}
 
 A linguagem Java originou-se a partir de um projeto de pesquisa, tendo como
 objetivo de desenvolver uma plataforma capaz de operar em tempo real. Em sua criação, decisões arquiteturais e de design foram embasadas em linguagens como SmallTalk, Eifell, Objective C e Cedar/Mesa~\cite{gosling1995java}. Para ser considerada uma linguagem orientada a objetos, Java suporta encapsulamento, polimorfismo e herança desde sua elaboração.
@@ -548,7 +564,7 @@ Desde sua quinta versão, tendo como base o trabalho de Bracha \textit{et al.}~\
 \addtocounter{footnote}{1}
 \footnotetext{Fonte: S. Lindley e P. Wadler, Idioms are oblivious, arrows are meticulous, monads are promiscuous, p. 97--98, 2011.\label{fnt:arrows-and-idioms}}
 
-Recentemente obteve-se o suporte a funções anônimas. Estas foram adicionadas a partir do Lambda Project~\cite{jsr335}, na versão 8 da JDK. Esta funcionalidade é essencial para a implementação de um contrato monádico, pois acrescenta características equivalentes as já existentes em linguagens como Haskell. Logo, contando com as funcionalidades já citadas e as recém adicionadas na plataforma, Java é capaz de fornecer suporte a mónades e flechas.
+Recentemente obteve-se o suporte a funções anônimas. Estas foram adicionadas a partir do Lambda Project~\cite{jsr335}, na versão 8 da JDK. De extrema importância, Lambda Expressions acrescentam  novas características compatíveis com as já existentes em linguagens funcionais. Logo, contando com as funcionalidades já citadas e as recém adicionadas na plataforma, Java é capaz de fornecer suporte a mónades e flechas.
 
 \subsection{Problema dos Tipos Construtores}
 
@@ -559,36 +575,65 @@ Tipos genéricos são equivalentes a construtores unários, incapazes de represe
 
 Entretanto, para a construção da interface monádica é necessário expressar um tipo construtor de aridade $n$. A declaração de um tipo $Monad(M(A))$ utilizando tipos genéricos é inválida, ocasiona um erro em tempo de compilação. Logo, a declaração de interface abaixo não pode ser expressa na linguagem.
 
-\begin{lstlisting}[caption={Interface Monad inválida}, style=haskell-style, label={lst:invalid-generic-monad}]
+\begin{lstlisting}[caption={Interface Monad inválida}, label={lst:invalid-generic-monad}]
 public interface Monad<M<A>> {}
 \end{lstlisting}
 
 Afim de solucionar esta inconsistência, na Listagem~\ref{lst:kind-interface} propõe-se o tipo $Kind(A, K)$. Sendo capaz de simular tipos construtores, este possui os parâmetros de tipo genérico $A$ e $K$.
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
-	\item ($A$) tomando como exemplo o tipo construtor invalido $Monad(M(A))$, este primeiro parâmetro genérico é equivalente ao valor encapsulado $A$ nesta declaração.
-	\item ($K$) tal parâmetro unifica A e M, ou seja, determina uma restrição na qual $K$ herda $Kind$ e parametriza este com um tipo curinga e o próprio $K$ que representa $Kind$.
+	\item ($A$) este primeiro parâmetro genérico é equivalente ao valor encapsulado $A$ na declaração ${Monad(M(A))}$.
+	\item ($K$) determina uma restrição de herança, na qual $K$ herda $Kind$ e parametriza este com um tipo curinga e o próprio $K$ que representa $Kind$.
 \end{enumerate}
 
-\begin{lstlisting}[caption={Interface Kind}, style=haskell-style, label={lst:kind-interface}]
+\begin{lstlisting}[caption={Interface Kind}, label={lst:kind-interface}]
 public interface Kind<A, K extends Kind<?, K>> {}
 \end{lstlisting}
 
-Apesar de impor uma restrição hierárquica entre os tipos genéricos em sua declaração, $Kind$ consegue simular tipos construtores em algumas funções. Com a nova inferência de tipos do compilador Java, esta interface garante 
+A hierarquia imposta na herança de $K$ e $Kind$ limita a simulação de tipos construtores reais. Em outras linguagens, estes apenas são preenchidos por tipos, sem necessariamente impor uma classificação. Contudo, subclasses que implementem o contrato de $Kind$ mantém o controle do tipo mais interno $A$ e do mais externo $K$. Além disso, estas também podem ser utilizadas como tipos construtores pois herdam as características de $Kind$ após implementa-lo.
 
-\begin{lstlisting}[caption={Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, style=haskell-style, label={lst:arrow-law}]
+\subsection{Implementação de $Monad$}
+
+A interface $Monad$, conforme~\ref{lst:monad-interface}, conta com as operações monádicas de identidade e multiplicação através do construtor de classe e do método $flatMap$. O tipo $Kind$ também está presente, assim como seus parâmetros de tipo definidos em $A$ e $M$. Também é importante salientar a implementação de $Functor$ que mantém consistente a hierarquia dessas construções e garante a implementação de $map$.
+
+\begin{lstlisting}[float = *, caption = {Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, label = {lst:monad-interface}]
 public interface Monad<A, M extends Kind<?, M>> extends Functor<A>, Kind<A, M> {
 
-    <B, MB extends Kind<B, M>> Monad<B, M> flatMap(Function<? super A, MB> f);
+	<B, MB extends Kind<B, M>> Monad<B, M> flatMap(Function<? super A, MB> f);
 
-    @Override
-    <B> Monad<B, M> map(Function<? super A, ? extends B> f);
+	<B> Monad<B, M> map(Function<? super A, ? extends B> f);
 }
 \end{lstlisting}
 
-interface Monad [listagem monad] foi utilizada para representar a type class da listagem x. Ambas, type class e interfaces, nomeiam e descrevem um conjunto de operações, a partir de entradas e saídas. Contudo, estas diferenciam entre si, pois uma type class limita o comportamento de um tipo enquanto uma interface limita o comportamento de uma classe. Além disso, para definir o contrato monádico eh necessário declarar também o contrato de functor, visto que todo monad é um functor.
+Em sua declaração, $M$ herda $Kind$, porém não especializa o valor deste primeiro tipo. Durante a declaração de interface ou classe, apenas os tipos genéricos deste escopo estão disponíveis, e desta forma não é possível determinar qual o valor do primeiro parâmetro de tipo de $Kind$. Como existe apenas $A$ e os métodos da classe podem retornar outros valores, determina-se que $Kind$ é parametrizado pelo operador coringa.
 
-%Apesar de parecidas, type classes não são iguais à interfaces, presentes na %orientação a objetos. Type classes expressam sobrecarga de método (polimorfismo ad-%hoc) enquanto interfaces trabalham com instâncias de classes e sobrecarga por %subtipagem.
+Para a declaração de $flatMap$ utilizam-se genéricos no escopo de método. Os tipos $B$ e $MB$ representam a saída da operação natural de multiplicação de mónade. Com estes declarados, a função $f$ que será aplicada neste contexto consegue expressar a entrada $A$ e saída $M(B)$. Como na declaração de classe $Kind$ foi parametrizado com o operador coringa, agora é possível especializar o retorno de $flatmap$ por $Monad(M(B))$.
+
+O método $map$ é herdado de $Functor$ e seu tipo de retorno é especializado em $Monad$. Neste,  utiliza-se o mesmo modo de declaração de $flatMap$ com genéricos no escopo de método. Sua declaração é mais simples, pois a função $f$ retorna um tipo simples $B$. Por fim, $M$ é utilizado no retorno de $map$ onde declara-se $Monad(M(B))$.
+
+Com a interface definida é possível construir as diversas implementações de mónade como em Haskell. Como exemplo, na Listagem~\ref{lst:maybe-class} define-se o mónade $Maybe$.
+
+\begin{lstlisting}[float = *, caption = {Interface $Maybe$\protect\footref{fnt:arrows-and-idioms}}, label = {lst:maybe-class}]
+public interface Maybe<A> extends Monad<A, Maybe<?>> {
+
+...
+
+	default <B, MB extends Kind<B, Maybe<?>>> Maybe<B> flatMap(Function<? super A, MB> f) {
+		if (isDefined()) return (Maybe<B>) f.apply(get());
+		else return new Nothing<>();
+	}
+
+	default <B> Maybe<B> map(Function<? super A, ? extends B> f) {
+		if (isDefined()) return Just.pure(f.apply(get()));
+		else return new Nothing<>();
+	}
+
+...
+
+}
+\end{lstlisting}
+
+Esta interface fornece a implementação padrão dos métodos $flatMap$ e $map$. As subclasses $Just$ e $Nothing$ funcionam como construtores, representando instâncias concretas de $Maybe$.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
