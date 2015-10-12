@@ -37,6 +37,7 @@ paper/*.out
 paper/*.synctex.gz
 paper/*.gz
 paper/*.dvi
+paper/*.listing
 paper/images/*.aux
 paper/images/*.tex.aux
 paper/images/*.dia~

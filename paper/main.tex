@@ -16,6 +16,7 @@
 \usepackage{caption}
 \usepackage{hyperref}
 \usepackage{scrextend}
+\usepackage{zi4}
 
 % enable matrix and arrows constructs for tikz
 \usetikzlibrary{matrix, arrows}
@@ -24,12 +25,13 @@
 \renewcommand{\lstlistingname}{Listagem}
 
 \lstset{
-	basicstyle = \footnotesize\tt, 
+	basicstyle=\ttfamily\footnotesize,
 	breakatwhitespace = true, 
 	breaklines = true, 
 	captionpos = b, 
 	extendedchars = true,
-	keywordstyle = \bf, 
+	keywordstyle = \bf,
+	keepspaces = true,
 	showspaces = false, 
 	showstringspaces = false, 
 	showtabs = false, 
@@ -40,7 +42,11 @@
 	belowskip = 5pt, 
 	xleftmargin = 5pt, 
 	xrightmargin = 5pt,
-	frame = single
+	frame = single,
+	framexrightmargin = 3pt,
+	framexleftmargin = 3pt,
+	framextopmargin = 5pt,
+	framexbottommargin = 5pt
 }
 
 % configs footnotes
@@ -535,7 +541,9 @@ newtype Kleisli m a b = Kleisli {
 
 \begin{lstlisting}[caption={Instância para $Monad$\protect\footref{fnt:prog-with-arrows}}, label={lst:kleisli-arrow}]
 instance Monad m => Arrow (Kleisli m) where
+
 	...
+	
 	first (Kleisli f) = Kleisli (\(a,c) -> 
 									do b <- f a
 									   return (b,c))
@@ -548,7 +556,9 @@ arr id >>> f = f
 f >>> arr id = f
 (f >>> g) >>> h = f >>> (g >>> h)
 arr (g . f) = arr f >>> arr g
+
 ...
+
 \end{lstlisting}
 
 \section{Aplicação em Java}
@@ -572,7 +582,6 @@ Construtores de classe constroem objetos, respectivamente, tipos construtores co
 
 Tipos genéricos são equivalentes a construtores unários, incapazes de representar tipos construtores com aridade $n$. Tendo como exemplo o mesmo tipo $C(A)$ anterior, este poderia ser expresso por genéricos se $C$ fosse estaticamente definido. Portanto, para qualquer $C$ definido estaticamente como $List$, $Set$, $Queue$, $Map$, e assim em diante, é possível parametrizar $A$ com genéricos.
 
-
 Entretanto, para a construção da interface monádica é necessário expressar um tipo construtor de aridade $n$. A declaração de um tipo $Monad(M(A))$ utilizando tipos genéricos é inválida, ocasiona um erro em tempo de compilação. Logo, a declaração de interface abaixo não pode ser expressa na linguagem.
 
 \begin{lstlisting}[caption={Interface Monad inválida}, label={lst:invalid-generic-monad}]
@@ -594,30 +603,31 @@ A hierarquia imposta na herança de $K$ e $Kind$ limita a simulação de tipos c
 
 \subsection{Implementação de $Monad$}
 
-A interface $Monad$, conforme~\ref{lst:monad-interface}, conta com as operações monádicas de identidade e multiplicação através do construtor de classe e do método $flatMap$. O tipo $Kind$ também está presente, assim como seus parâmetros de tipo definidos em $A$ e $M$. Também é importante salientar a implementação de $Functor$ que mantém consistente a hierarquia dessas construções e garante a implementação de $map$.
+A interface $Monad$, conforme~\ref{lst:monad-interface}, conta com as operações monádicas de identidade e multiplicação por meio de seu construtor de classe e do método $flatMap$. Afim de tornar $M$ um tipo construtor,  $Monad$ implementa $Kind$ e parametriza este nos tipos $A$ e $M$. Também é importante salientar a implementação de $Functor$ que mantém consistente a hierarquia dessas construções e garante a implementação de $map$.
 
-\begin{lstlisting}[float = *, caption = {Leis para $Arrow$\protect\footref{fnt:arrows-and-idioms}}, label = {lst:monad-interface}]
+Em sua declaração, $M$ herda $Kind$, porém não especializa o valor deste primeiro tipo. Durante a declaração de interface ou classe, apenas os tipos genéricos deste escopo estão disponíveis, e desta forma não é possível determinar qual o valor do primeiro parâmetro de tipo de $Kind$. Como existe apenas $A$ e os métodos da classe podem retornar outros valores, determina-se que $Kind$ é parametrizado pelo operador coringa.
+
+Para a declaração de $flatMap$ utilizam-se genéricos no escopo de método. Os tipos $B$ e $M(B)$ representam a saída da operação natural de multiplicação de mónade. Com estes declarados, a função $f$ que será aplicada neste contexto consegue expressar a entrada $A$ e saída $M(B)$. Como na declaração de classe $Kind$ foi parametrizado com o operador coringa, agora é possível especializar o retorno de $flatmap$ por $Monad(M(B))$.
+
+O método $map$ é herdado de $Functor$ e seu tipo de retorno é especializado em $Monad$. Neste,  utiliza-se o mesmo modo de declaração de $flatMap$ com genéricos no escopo de método. Sua declaração é mais simples, pois a função $f$ retorna um tipo simples $B$. Por fim, $M$ é utilizado no retorno de $map$ onde declara-se $Monad(M(B))$.
+
+Diversas estruturas que utilizam o conceito do contexto monádico podem implementar o contrato $Monad$ da Listagem~\ref{lst:monad-interface}. Os métodos $map$ e $flatMap$ e os parâmetros de tipo exigidos pela interface visam garantir consistência entre suas implementações. Para demonstrar os benefícios de $Monad$, na Listagem~\ref{lst:maybe-class},~\ref{lst:just-class} e~\ref{lst:nothing-class} a interface $Maybe$ e suas subclasses $Just$ e $Nothing$ são implementadas.
+
+\begin{lstlisting}[float = *, caption = {Interface $Monad$}, label = {lst:monad-interface}]
 public interface Monad<A, M extends Kind<?, M>> extends Functor<A>, Kind<A, M> {
 
 	<B, MB extends Kind<B, M>> Monad<B, M> flatMap(Function<? super A, MB> f);
 
 	<B> Monad<B, M> map(Function<? super A, ? extends B> f);
+
 }
 \end{lstlisting}
 
-Em sua declaração, $M$ herda $Kind$, porém não especializa o valor deste primeiro tipo. Durante a declaração de interface ou classe, apenas os tipos genéricos deste escopo estão disponíveis, e desta forma não é possível determinar qual o valor do primeiro parâmetro de tipo de $Kind$. Como existe apenas $A$ e os métodos da classe podem retornar outros valores, determina-se que $Kind$ é parametrizado pelo operador coringa.
-
-Para a declaração de $flatMap$ utilizam-se genéricos no escopo de método. Os tipos $B$ e $MB$ representam a saída da operação natural de multiplicação de mónade. Com estes declarados, a função $f$ que será aplicada neste contexto consegue expressar a entrada $A$ e saída $M(B)$. Como na declaração de classe $Kind$ foi parametrizado com o operador coringa, agora é possível especializar o retorno de $flatmap$ por $Monad(M(B))$.
-
-O método $map$ é herdado de $Functor$ e seu tipo de retorno é especializado em $Monad$. Neste,  utiliza-se o mesmo modo de declaração de $flatMap$ com genéricos no escopo de método. Sua declaração é mais simples, pois a função $f$ retorna um tipo simples $B$. Por fim, $M$ é utilizado no retorno de $map$ onde declara-se $Monad(M(B))$.
-
-Com a interface definida é possível construir as diversas implementações de mónade como em Haskell. Como exemplo, na Listagem~\ref{lst:maybe-class} define-se o mónade $Maybe$.
-
-\begin{lstlisting}[float = *, caption = {Interface $Maybe$\protect\footref{fnt:arrows-and-idioms}}, label = {lst:maybe-class}]
+\begin{lstlisting}[float = *, caption = {Interface $Maybe$}, label = {lst:maybe-class}]
 public interface Maybe<A> extends Monad<A, Maybe<?>> {
 
-...
-
+	...
+	
 	default <B, MB extends Kind<B, Maybe<?>>> Maybe<B> flatMap(Function<? super A, MB> f) {
 		if (isDefined()) return (Maybe<B>) f.apply(get());
 		else return new Nothing<>();
@@ -627,13 +637,60 @@ public interface Maybe<A> extends Monad<A, Maybe<?>> {
 		if (isDefined()) return Just.pure(f.apply(get()));
 		else return new Nothing<>();
 	}
+	
+	...	
+	
+}
+\end{lstlisting}
 
+\begin{lstlisting}[caption = {Classe $Just$}, label = {lst:just-class}]
+public class Just<A> implements Maybe<A> {
+
+	...
+
+	public Just(A value) {
+		this.value = value;
+	}
+
+	public static <A> Just<A> pure(A a) {
+		return new Just<>(a);
+	}
+    
+	...
+
+}
+\end{lstlisting}
+
+O tipo $Maybe$ é uma mónade que encapsula um valor opcional. Esta pode conter valor e ser uma instância de $Just(A)$, ou estar vazia e corresponder a $Nothing$. Os métodos $map$ e $flatMap$ dispõem o encadeamento de funções no contexto de $Maybe$. Os construtores e métodos utilitários  como $pure$ determinam como dá-se a instanciação.
+
+\begin{lstlisting}[caption = {Classe $Nothing$}, label = {lst:nothing-class}]
+public class Nothing<A> implements Maybe<A> {
+
+	public Nothing() {}
+    
 ...
 
 }
 \end{lstlisting}
 
-Esta interface fornece a implementação padrão dos métodos $flatMap$ e $map$. As subclasses $Just$ e $Nothing$ funcionam como construtores, representando instâncias concretas de $Maybe$.
+Na Listagem~\ref{lst:maybe-example} demonstra-se a utilização de $Maybe$ e suas subclasses para evitar exceções em tempo de execução. A função $divide$ recebe dois argumentos do tipo $double$ e garante que divisões por zero não ocorram, retornando $Just(Double)$ ou $Nothing$. No retorno desta,  encadeia uma lambda expression trivial de soma com $flatMap$. Portanto, se $n$ assumir valor zero, o retorno de $flatMap$ é $Nothing$, caso contrário teremos o valor inicial de $a$ dividido por $b$ e acrescentado em dois.
+
+\begin{lstlisting}[caption = {Exemplo de utilização de $Maybe$}, label = {lst:maybe-example}]
+public Maybe<Double> divide(double a, double b) {
+	if (b == 0) return new Nothing();
+	else return Just.pure(a / b);
+}
+
+...
+
+divide(10, n).flatMap(x -> Just.pure(x + 2))
+\end{lstlisting}
+
+\subsection{Implementação de Kleisli}
+
+\section{TRABALHOS RELACIONADOS}
+
+\section{CONCLUSÃO}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
