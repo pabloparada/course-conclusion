@@ -109,7 +109,7 @@ O paradigma funcional expressa programas através de composições mantendo a im
 Na última década muitos dos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
 \subsection{Lambda Expressions e Anonymous Inner Classes}
-Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a Listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método sort da classe Arrays.
+Ao fornecer suporte a funções de primeira classe, também chamadas de lambda expressions ou closures\footnote{Lambda expressions ou closures são funções que não exigem vínculos de classe, como exemplo podendo ser atribuída a uma variável. Com esta caraterística, uma função atua como dado, ou seja, pode ser passada como argumento para outras funções.}, a linguagem Java habilita a substituição de annonymous inner classes (AIC) de forma transparente. Conforme a Listagem~\ref{lst:array-aic-sort}, em Java a ordenação de inteiros pode ser implementada a partir de uma AIC em conjunto do método $sort$ da classe $Arrays$.
 
 \begin{lstlisting}[caption={Sort - Anonymous Inner Class}, label={lst:array-aic-sort}]
 Integer[] integers = new Integer[]{5, 4, 3, 2, 1};
@@ -129,9 +129,9 @@ Entretanto, com closures o mesmo método $sort$ pode ter seus argumentos simplif
 Arrays.sort(integers, (a, b) -> a.compareTo(b));
 \end{lstlisting}
 
-De fato, apesar de expressarem o mesmo comportamento a nível de código, ambas funcionalidades possuem diferentes implementações sob a Máquina Virtual Java (JVM). AIC são compiladas, ou seja, geram novos arquivos contendo declarações de classes. Além do mais, ao utilizar a palavra reservada \textbf{this} referencia-se a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo classloader e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto heap~\cite{hunt2011java} para alocação de objetos quanto permgem\footnote{Área de memória limitada separada da heap chamada Permanent Generation que possui a função de armazenar objetos de geração permanente como metadados, classes e métodos.}.
+De fato, apesar de expressarem o mesmo comportamento a nível de código, ambas funcionalidades possuem diferentes implementações sob a Máquina Virtual Java (JVM). AIC são compiladas, ou seja, geram novos arquivos contendo declarações de classes. Além do mais, ao utilizar a palavra reservada $this$ referencia-se a própria instância anônima. Como representam instâncias de uma classe, estas devem ser carregadas pelo classloader e seus construtores invocados pela máquina virtual. Ambas etapas consomem memória, tanto heap~\cite{hunt2011java} para alocação de objetos quanto permgem\footnote{Área de memória limitada separada da heap chamada Permanent Generation que possui a função de armazenar objetos de geração permanente como metadados, classes e métodos.}.
 
-Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução invokedynamic~\cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a \textbf{this}, a classe que delimita a lambda expression é acessada, ao contrário de AIC que acessa sua própria instância.
+Diferentemente de AIC, lambdas postergam a estratégia de compilação para em tempo de execução, utilizando a instrução $invokedynamic$~\cite{goetz2012translation}. Funções são traduzidas para métodos estáticos vinculados ao arquivo da classe correspondente a sua declaração, eliminando o consumo de memória. Agora, ao referir-se a $this$, a classe que delimita a lambda expression é acessada, ao contrário de AIC que acessa sua própria instância.
 
 Dessa forma, o suporte a lambda expressions traz benefícios para os usuários da linguagem. Tal funcionalidade está além de uma mera substituição, pois acrescenta um novo paradigma no ecossistema Java.
 
@@ -673,7 +673,7 @@ public class Nothing<A> implements Maybe<A> {
 }
 \end{lstlisting}
 
-Na Listagem~\ref{lst:maybe-example} demonstra-se a utilização de $Maybe$ e suas subclasses para evitar exceções em tempo de execução. A função $divide$ recebe dois argumentos do tipo $double$ e garante que divisões por zero não ocorram, retornando $Just(Double)$ ou $Nothing$. No retorno desta,  encadeia uma lambda expression trivial de soma com $flatMap$. Portanto, se $n$ assumir valor zero, o retorno de $flatMap$ é $Nothing$, caso contrário teremos o valor inicial de $a$ dividido por $b$ e acrescentado em dois.
+Na Listagem~\ref{lst:maybe-example} demonstra-se a utilização de $Maybe$ e suas subclasses para evitar exceções em tempo de execução. O método $divide$ recebe dois argumentos do tipo $double$ e garante que divisões por zero não ocorram, retornando $Just(Double)$ ou $Nothing$. No retorno deste método,  encadeia-se uma lambda expression trivial de soma com $flatMap$. Portanto, se $n$ assumir valor zero, o retorno de $flatMap$ é $Nothing$, caso contrário teremos o valor inicial de $a$ dividido por $b$ e acrescentado em dois.
 
 \begin{lstlisting}[caption = {Exemplo de utilização de $Maybe$}, label = {lst:maybe-example}]
 public Maybe<Double> divide(double a, double b) {
@@ -685,6 +685,29 @@ public Maybe<Double> divide(double a, double b) {
 
 divide(10, n).flatMap(x -> Just.pure(x + 2))
 \end{lstlisting}
+
+Consequentemente, $Maybe$ possibilita que os axiomas de identidade e associatividade de $Monad$ sejam validados. Na Listagem~\ref{lst:java-monad-laws}, os métodos $leftIdentity$, $rightIdentity$ e $associativity$ representam as leis que regem a estrutura e garantem que estas são válidas para $Maybe$, garantindo a fidelidade da interface $Monad$.
+
+\begin{lstlisting}[caption = {Leis de $Monad$}, label = {lst:java-monad-laws}]
+public void leftIdentity() {
+	assertEquals(Just.pure(a).flatMap(f), f.apply(a));
+}
+
+public void rightIdentity() {
+	assertEquals(m.flatMap(Just::pure), m);
+}
+
+
+public void associativity() {
+	assertEquals(m.flatMap(f).flatMap(g), m.flatMap(x -> f.apply(x).flatMap(g)));
+}
+\end{lstlisting}
+
+\paragraph{Identidade - $leftIdentity$ e $rightIdentity$} encapsular um valor em um contexto monádico não deve apresentar alterações no valor ou na mónade.
+
+\paragraph{Associatividade - $associativity$} a ordem na qual as funções são encadeadas em um contexto monádico não deve importar.
+
+Todas as leis estão implementadas considerando a igualdade de objetos descrita por $equals$ e $hashcode$~\cite{gosling1995java}. O método $assertEquals$ recebe dois argumentos como valores comparativos e a equivalência dos objetos deve resultar em um tipo booleano verdadeiro, caso contrário a estrutura é inválida.
 
 \subsection{Implementação de Kleisli}
 
