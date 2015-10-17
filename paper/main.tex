@@ -668,7 +668,7 @@ public class Nothing<A> implements Maybe<A> {
 
 	public Nothing() {}
     
-...
+	...
 
 }
 \end{lstlisting}
@@ -703,13 +703,27 @@ public void associativity() {
 }
 \end{lstlisting}
 
-\paragraph{Identidade - $leftIdentity$ e $rightIdentity$} encapsular um valor em um contexto monádico não deve apresentar alterações no valor ou na mónade.
+\paragraph{Identidade - $leftIdentity$ e $rightIdentity$} encapsular um valor em um contexto monádico não deve apresentar alterações no valor ou na estrutura da mónade.
 
 \paragraph{Associatividade - $associativity$} a ordem na qual as funções são encadeadas em um contexto monádico não deve importar.
 
-Todas as leis estão implementadas considerando a igualdade de objetos descrita por $equals$ e $hashcode$~\cite{gosling1995java}. O método $assertEquals$ recebe dois argumentos como valores comparativos e a equivalência dos objetos deve resultar em um tipo booleano verdadeiro, caso contrário a estrutura é inválida.
+Todas as leis estão implementadas considerando a igualdade de objetos descrita por $equals$ e $hashcode$~\cite{gosling1995java}. O método $assertEquals$ recebe dois argumentos como valores comparativos e a equivalência dos objetos deve resultar em um tipo booleano verdadeiro, caso contrário a as leis são invalidadas.
+
+\subsection{Problema da Generalização de Arrow}
+
+Na declaração de $Arrow$ na Listagem~\ref{lst:java-arrow-interface}, a interface apresenta três parâmetros de tipo. Como primeiro tipo genérico, $A$ representa um tipo construtor por ser subtipo de $Kind$. O restante, $B$ e $C$, apenas explicitam os tipos de entrada e saída de $Arrow$.
+
+\begin{lstlisting}[caption = {Interface $Arrow$}, label = {lst:java-arrow-interface}]
+interface Arrow<A extends Kind<?, ?>, B, C> {
+	<D, AD extends Kind<D, ?>> Arrow<AD, B, D> andThen(Arrow<AD, C, D> k);
+}
+\end{lstlisting}
+
+Assim como $Monad$, subclasses de $Arrow$ devem utilizar seus construtores para incluir $B \rightarrow C$ em seus contextos. Além disso, o método $andThen$ define a composição de $Arrow$ por $A(B, D) = A(B, C) \; andThen \; A(C, D)$.
 
 \subsection{Implementação de Kleisli}
+
+Para qualquer mónade existe uma flecha correspondente, tal que funções do tipo $A \rightarrow M(B)$ são flechas em potencial.
 
 \section{TRABALHOS RELACIONADOS}
 
