@@ -713,17 +713,83 @@ Todas as leis estão implementadas considerando a igualdade de objetos descrita 
 
 Na declaração de $Arrow$ na Listagem~\ref{lst:java-arrow-interface}, a interface apresenta três parâmetros de tipo. Como primeiro tipo genérico, $A$ representa um tipo construtor por ser subtipo de $Kind$. O restante, $B$ e $C$, apenas explicitam os tipos de entrada e saída de $Arrow$.
 
+Assim como $Monad$, subclasses de $Arrow$ devem utilizar seus construtores para incluir $B \rightarrow C$ em seus contextos. Além disso, o método $andThen$ define a composição de $Arrow$ por $A(B, D) = A(B, C) \circ A(C, D)$.
+
 \begin{lstlisting}[caption = {Interface $Arrow$}, label = {lst:java-arrow-interface}]
 interface Arrow<A extends Kind<?, ?>, B, C> {
 	<D, AD extends Kind<D, ?>> Arrow<AD, B, D> andThen(Arrow<AD, C, D> k);
 }
 \end{lstlisting}
 
-Assim como $Monad$, subclasses de $Arrow$ devem utilizar seus construtores para incluir $B \rightarrow C$ em seus contextos. Além disso, o método $andThen$ define a composição de $Arrow$ por $A(B, D) = A(B, C) \; andThen \; A(C, D)$.
+A Listagem~\ref{lst:java-wrong-kleisli-instance} declara a classe $Kleisli$. Esta implementa o contrato definido em $Arrow$ e conta com os tipos genéricos $M$, $A$ e $B$. Os argumentos e a implementação de $andThen$ foram eliminados afim de manter a simplicidade na declaração do método.
 
-\subsection{Implementação de Kleisli}
 
-Para qualquer mónade existe uma flecha correspondente, tal que funções do tipo $A \rightarrow M(B)$ são flechas em potencial.
+Como $Kleisli$ trabalha com tipos monádicos, seu primeiro parâmetro de tipo impõe uma ligação entre $M$ e $Monad$. O tipo genérico $A$ define a entrada da função encapsulada pelo construtor de classe e $B$ o valor encapsulado pela mónade $M$. Além disso, os tipos genéricos declarados em $Kleisli$ são repassados para $Arrow$ e consequentemente formam os tipos de entrada e saída dos métodos sobrescritos.
+
+\begin{lstlisting}[caption = {Implementação concreta da interface $Arrow$}, label = {lst:java-wrong-kleisli-instance}]
+class Kleisli<M extends Monad<B, ?>, A, B> implements Arrow<M, A, B> {
+
+	...
+
+	public Kleisli(Function<A, M> f) {
+        this.f = f;
+	}
+
+	public <D, MD extends Kind<D, ?>> Arrow<MD, A, D> andThen() {
+		...
+	}
+}
+\end{lstlisting}
+
+Para manter a consistência na implementação de $Kleisli$, o método $andThen$ deve retornar uma instância de $Arrow$ onde $M(D)$ extenda $Monad$. Contudo, $Arrow$ impõe restrições através de $Kind$ e estas devem ser mantidas na subclassificação. Portanto, o retorno de $andThen$ definido por $Arrow$ não pode ser expresso em $Kleisli$. Assim, a interface $Arrow$ não é suficientemente genérica de modo que possa expressar as diferentes implementações de flechas.
+
+\subsection{Implementação de $Kleisli$}
+
+A implementação da classe $Kleisli$ na Listagem~\ref{lst:java-right-kleisli-instance} contem os tipos genéricos $M$, $B$ e $C$. Como esta trabalha sob tipos monádicos e suas composições, $M$ é declarado como sendo um $Monad$ e representa o retorno da função encapsulada por $Kleisli$. O tipo $B$ é a entrada da função e $C$ o valor encapsulado no contexto de $M$, dado por $M(C)$.
+
+Semelhante a $Monad$, valores são incluídos no contexto de $Kleisli$ a partir construtor de classe. Este recebe uma função $B \rightarrow M$ que é armazenada e está disponível no escopo de classe. A aplicação da função encapsulada é disponibilizada pelo método $run$.
+
+O operador de composição é expresso pelo método $andThen$. Apesar de conter diversas declarações de tipos genéricos na assinatura do método, $andThen$ recebe uma instancia de $Kleisli$ parametrizada por $M(D)$, $C$ e $D$. Deste argumento dá-se a composição, onde o valor de $C$ resultante da aplicação de $B \rightarrow M(C)$ é passada para $C \rightarrow M(D)$ de $k$. Deste encadeamento obtemos uma nova instancia de $Kleisli$ definida por $M(D)$, $B$ e $D$.
+
+\begin{lstlisting}[float = *, caption = {Implementação de $Kleisli$}, label = {lst:java-right-kleisli-instance}]
+class Kleisli<M extends Monad<?, ?>, B, C> {
+
+	...
+
+	public Kleisli(Function<B, M> f) {
+		this.f = f;
+	}
+
+	public M run(B b) {
+		return f.apply(b);
+	}
+
+	public <D, MC extends Monad<C, MC>, MD extends Monad<D, ?>> Kleisli<MD, B, D> andThen(Kleisli<MD, C, D> k) {
+		return new Kleisli<>(b -> (MD) ((MC) this.run(b)).flatMap(c -> (MC) k.run(c)));
+	}
+}
+\end{lstlisting}
+
+Com a implementação de Kleisli é possível compor mónades de forma semelhante a cadeia dos métodos $flatMap$ e $map$. Na Listagem~\ref{lst:monad-kleisli-composition} $f$, $g$ e $h$ expressam funções na forma ${A \rightarrow M(B)}$, mais precisamente ${Integer \rightarrow Maybe(Integer)}$. O método $andThen$ em conjunto com $run$ consegue aplicar o valor passado como argumento na função encapsulada e repassa-lo para outras flechas, encadeando os valores entre as mónades.
+
+\begin{lstlisting}[caption = {Composição monádica com $andThen$}, label = {lst:monad-kleisli-composition}]
+Kleisli<Maybe<Integer>, Integer, Integer> f() {
+	return new Kleisli<>(i -> Just.pure(i + 1));
+}
+
+Kleisli<Maybe<Integer>, Integer, Integer> g() {
+	return new Kleisli<>(i -> Just.pure(i * 10));
+}
+
+Kleisli<Maybe<Integer>, Integer, Integer> h() {
+	return new Kleisli<>(i -> Just.pure(i - 5));
+}
+
+h().andThen(f().andThen(g())).run(5);
+
+\end{lstlisting}
+
+Além disso, as regras das estruturas subjacentes na flecha é mantida. O resultado da cadeia de $h \; andThen \; f \; andThen \; g$ com a chamada de $run$ parametrizada pelo inteiro de valor $5$ resulta em uma instância de $Just(10)$. De maneira semelhante, se umas destas funções retornar uma instância de $Nothing$, tal cadeia não será executada e retornará $Nothing$, mantendo o comportamento da mónade de nulidade.
 
 \section{TRABALHOS RELACIONADOS}
 
