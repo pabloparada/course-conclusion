@@ -770,7 +770,7 @@ class Kleisli<M extends Monad<?, ?>, B, C> {
 }
 \end{lstlisting}
 
-Com a implementação de Kleisli é possível compor mónades de forma semelhante a cadeia dos métodos $flatMap$ e $map$. Na Listagem~\ref{lst:monad-kleisli-composition} $f$, $g$ e $h$ expressam funções na forma ${A \rightarrow M(B)}$, mais precisamente ${Integer \rightarrow Maybe(Integer)}$. O método $andThen$ em conjunto com $run$ consegue aplicar o valor passado como argumento na função encapsulada e repassa-lo para outras flechas, encadeando os valores entre as mónades.
+Com a implementação de $Kleisli$ é possível compor mónades de forma semelhante a cadeia de $flatMap$ e $map$. Na Listagem~\ref{lst:monad-kleisli-composition} $f$, $g$ e $h$ expressam funções na forma ${A \rightarrow M(B)}$, mais precisamente ${Integer \rightarrow Maybe(Integer)}$. O método $andThen$ em conjunto com $run$ consegue aplicar o valor passado como argumento na função encapsulada e repassa-lo para outras flechas, encadeando os valores entre as mónades.
 
 \begin{lstlisting}[caption = {Composição monádica com $andThen$}, label = {lst:monad-kleisli-composition}]
 Kleisli<Maybe<Integer>, Integer, Integer> f() {
@@ -789,7 +789,26 @@ h().andThen(f().andThen(g())).run(5);
 
 \end{lstlisting}
 
-Além disso, as regras das estruturas subjacentes na flecha é mantida. O resultado da cadeia de $h \; andThen \; f \; andThen \; g$ com a chamada de $run$ parametrizada pelo inteiro de valor $5$ resulta em uma instância de $Just(10)$. De maneira semelhante, se umas destas funções retornar uma instância de $Nothing$, tal cadeia não será executada e retornará $Nothing$, mantendo o comportamento da mónade de nulidade.
+$Kleisli$ mantém as regras das estruturas subjacentes. A aplicação de $h$, $f$, $g$ e $run(5)$ por $andThen$ resulta em uma instância $Just(10)$. De maneira semelhante, se umas destas funções retornar  $Nothing$, a cadeia não é executada e retorna $Nothing$.
+
+Como todas as estruturas implementadas, $Kleisli$ conta com as leis de composição. A Listagem~\ref{lst:kleisli-laws} demonstra a validade dos axiomas de identidade e associatividade.
+
+\begin{lstlisting}[caption = {Leis de $Kleisli$}, label = {lst:kleisli-laws}]
+
+public void identity() {
+	... kf = new Kleisli<>(f);
+	
+	assertEquals(kf.run(a), f.apply(a));
+}
+
+public void associativity() {
+	assertEquals(g.andThen(h).andThen(f).run(a), 							 f.andThen(g.andThen(h)).run(a));
+}
+\end{lstlisting}
+
+\paragraph{Identidade - $identity$} a função $f$ com assinatura na forma $A \rightarrow B$ é encapsulada por $Kleisli$ e aplicada com $a$. A mesma função $f$ fora do contexto de $Kleisli$ é aplicada também com $a$. A integridade do axioma de identidade está na igualdade do valor obtido de ambas aplicações.
+
+\paragraph{Associatividade - $associativity$} 
 
 \section{TRABALHOS RELACIONADOS}
 
