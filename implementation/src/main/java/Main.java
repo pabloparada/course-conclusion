@@ -1,4 +1,3 @@
-import java.util.DoubleSummaryStatistics;
 import java.util.UUID;
 
 public class Main {
@@ -14,15 +13,30 @@ public class Main {
 
         k.run(config);
 
-        Kleisli<Maybe<Integer>, String, Integer> md = new Kleisli<>(s -> new Just<>(Integer.valueOf(s)));
-        Kleisli<Maybe<Double>, Integer, Double> mb = new Kleisli<>(d -> new Just<>(d.doubleValue()));
-
-        Kleisli<Maybe<Double>, String, Double> mc = md.andThen(mb);
-        Kleisli<Maybe<Double>, String, Double> ma = mb.compose(md);
-
-        System.out.println(mc.run("7").get());
+        Kleisli<Maybe<Double>, Integer, Double> mb = new Kleisli<>(d -> Just.pure(d.doubleValue()));
+        Kleisli<Maybe<String>, Double, String> ma = new Kleisli<>(d -> Just.pure(d.toString()));
 
         System.out.println(main.getSessionIdFromConfig(config));
+
+        System.out.println(main.h().andThen(main.f().andThen(main.g())).run(5));
+
+    }
+
+    private Kleisli<Maybe<Integer>, Integer, Integer> h() {
+        return new Kleisli<>(i -> Just.pure(i - 5));
+    }
+
+    private Kleisli<Maybe<Integer>, Integer, Integer> f() {
+        return new Kleisli<>(i -> Just.pure(i + 1));
+    }
+
+    Kleisli<Maybe<Integer>, Integer, Integer> g() {
+        return new Kleisli<>(i -> new Nothing());
+    }
+
+    public Maybe<Double> divide(double a, double b) {
+        if (b == 0) return new Nothing();
+        else return Just.pure(a / b);
     }
 
     public String getSessionIdFromConfig(Config config) {

@@ -6,20 +6,20 @@ import static org.junit.Assert.assertEquals;
 
 public class MaybeMonadLaws {
 
-    private Function<Integer, Maybe<String>> f = i -> new Just<>(i.toString());
-    private Function<String, Maybe<Integer>> g = s -> new Just<>(Integer.valueOf(s));
+    private Function<Integer, Maybe<String>> f = i -> Just.pure(i.toString());
+    private Function<String, Maybe<Integer>> g = s -> Just.pure(Integer.valueOf(s));
 
-    private Maybe<Integer> m = new Just<>(3);
+    private Maybe<Integer> m = Just.pure(3);
 
     @Test
     public void leftIdentity() {
-        final Integer a = 3;
-        assertEquals(new Just<>(a).flatMap(f), (f.apply(a)));
+        final int a = 3;
+        assertEquals(Just.pure(a).flatMap(f), f.apply(a));
     }
 
     @Test
     public void rightIdentity() {
-        assertEquals(m.flatMap(Just::new), m);
+        assertEquals(m.flatMap(Just::pure), m);
     }
 
     @Test

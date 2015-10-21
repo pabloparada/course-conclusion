@@ -1,12 +1,13 @@
 public final class Just<A> implements Maybe<A> {
     private A value;
 
-    public Just(A value) {
+    private Just(A value) {
         this.value = value;
     }
 
-    public static <A> Just<A> pure(A a) {
-        return new Just<>(a);
+    public static <A> Maybe<A> pure(A a) {
+        if (a == null) return new Nothing();
+        else return new Just<>(a);
     }
 
     @Override
