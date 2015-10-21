@@ -1,6 +1,6 @@
 import java.util.function.Function;
 
-class Kleisli<M extends Monad<?, ?>, B, C> {
+public final class Kleisli<M extends Monad<?, ?>, B, C> {
     private Function<B, M> f;
 
     public Kleisli(Function<B, M> f) {
