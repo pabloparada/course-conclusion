@@ -63,11 +63,11 @@
 
 \author{
 
-	\IEEEauthorblockN{ Mozart L. Siqueira¹, Pablo M. Parada² }
+	\IEEEauthorblockN{ Pablo M. Parada¹, Mozart L. Siqueira²}
 	\IEEEauthorblockA{
 		Ciência da Computação \\
 		Centro Universitário La Salle - Unilasalle \\
-		E-mail: mozarts@unilasalle.edu.br¹, pablo.paradabol@gmail.com²
+		E-mail: pablo.paradabol@gmail.com¹, mozarts@unilasalle.edu.br²
 	}
 }
 					  
@@ -789,9 +789,9 @@ h().andThen(f().andThen(g())).run(5);
 
 \end{lstlisting}
 
-$Kleisli$ mantém as regras das estruturas subjacentes. A aplicação de $h$, $f$, $g$ e $run(5)$ por $andThen$ resulta em uma instância $Just(10)$. De maneira semelhante, se umas destas funções retornar  $Nothing$, a cadeia não é executada e retorna $Nothing$.
+$Kleisli$ mantém as regras das estruturas subjacentes. A aplicação de $h$, $f$, $g$ e $run(5)$ por $andThen$ resulta em uma instância $Just(10)$. De maneira semelhante, se umas destas funções retornar  $Nothing$, a cadeia não é executada e retorna este como resultado final.
 
-Como todas as estruturas implementadas, $Kleisli$ conta com as leis de composição. A Listagem~\ref{lst:kleisli-laws} demonstra a validade dos axiomas de identidade e associatividade.
+Diversas leis devem ser satisfeitas por instâncias de $Arrow$. Todavia, como $Kleisli$ não implementa uma interface genérica de $Arrow$, em sua implementação preocupou-se apenas com as leis de composição. Na Listagem~\ref{lst:kleisli-laws} são implementados os axiomas de identidade e associatividade de $Kleisli$.
 
 \begin{lstlisting}[caption = {Leis de $Kleisli$}, label = {lst:kleisli-laws}]
 
@@ -806,9 +806,9 @@ public void associativity() {
 }
 \end{lstlisting}
 
-\paragraph{Identidade - $identity$} a função $f$ com assinatura na forma $A \rightarrow B$ é encapsulada por $Kleisli$ e aplicada com $a$. A mesma função $f$ fora do contexto de $Kleisli$ é aplicada também com $a$. A integridade do axioma de identidade está na igualdade do valor obtido de ambas aplicações.
+\paragraph{Identidade - $identity$} a função $f$ com assinatura na forma $A \rightarrow B$ é encapsulada por $Kleisli$ e aplicada por $run(a)$. A mesma função $f$ fora do contexto de $Kleisli$ é aplicada por $apply(a)$. A integridade do axioma de identidade está na igualdade do valor obtido de ambas aplicações.
 
-\paragraph{Associatividade - $associativity$} 
+\paragraph{Associatividade - $associativity$} as funções $f$, $g$ e $h$ com assinatura na forma $A \rightarrow M(B)$ são encapsuladas em instâncias de $Kleisli$ e compostas por $andThen$ em diferentes ordens. A associatividade é garantida pela aplicação de ambas cadeias de funções por $run(a)$ e a igualdade de seus resultados.
 
 \section{TRABALHOS RELACIONADOS}
 
