@@ -91,6 +91,8 @@
 \section{INTRODUÇÃO}
 \label{sec:intro}
 
+
+
 <escrever>
 
 \section{PARADIGMA FUNCIONAL}
@@ -457,7 +459,7 @@ class Monad m where
 
 Conforme a Listagem~\ref{lst:type-class-monad}, a type class $Monad$ consiste em um tipo construtor $m$ e as operações $>>=$, $>>$ e $return$. A operação $>>$ existe apenas como um facilitador para a composição de funções no contexto $m$. $>>=$ e $return$ são equivalentes as transformações naturais de multiplicação e identidade.
 
-A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é bind, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. Bind aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando uma nova instancia de $Monad$ do tipo $m\;b$.
+A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é $bind$, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. $Bind$ aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando uma nova instancia de $Monad$ do tipo $m\;b$.
 
 Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
 
@@ -811,6 +813,12 @@ public void associativity() {
 \paragraph{Associatividade - $associativity$} as funções $f$, $g$ e $h$ com assinatura na forma $A \rightarrow M(B)$ são encapsuladas em instâncias de $Kleisli$ e compostas por $andThen$ em diferentes ordens. A associatividade é garantida pela aplicação de ambas cadeias de funções por $run(a)$ e a igualdade de seus resultados.
 
 \section{TRABALHOS RELACIONADOS}
+
+Em trabalhos relacionados Du Bois e Echevarria~\cite{dubois2009domainspecific} apresentam CMTJava, uma linguagem de domínio específico para compor transações em memória. Transações são implementadas por uma mónade de passagem de estado com funções BBGA\footnote{Projeto de extensão da linguagem Java que tinha como proposta suportar lambda expressions.}. A mónade $STM$ encapsula valores do tipo $A$ e controla o acesso a memória compartilhada na concorrência computacional. O método $stmreturn$ insere qualquer valor do tipo $A$ no contexto da mónade resultando na criação de uma simples transação. A combinação de diferentes transações é disponibilizada através do método $bind$, que tem como argumento uma transação do tipo $STM(A)$ e uma função $A \rightarrow STM(B)$.
+
+Na computação quântica, Crestani e Kaizer~\cite{crestani2013quantum} utilizam o conceito de mónade para a construção de abstrações de algoritmos quânticos. A mónade quântica encapsula valores do tipo $A$ em vetores quânticos $Vec(A)$. O método $qreturn$ recebe um argumento de tipo $A$ e constrói estados quânticos retornando instâncias $Vec(A)$. Transformações quânticas são representadas por $Lin(A, B)$ e descrevem transformações $A \rightarrow V(B)$ encadeadas por $bind$.
+
+Em ambos trabalhos as mónades implementadas não extendem um contrato genérico $Monad$~\ref{lst:monad-interface}. Além disso, estas mónades são compostas pelos métodos fornecidos em suas instâncias, isto é, sem a utilização de abstrações como $Kleisli$~\ref{lst:java-right-kleisli-instance}.
 
 \section{CONCLUSÃO}
 
