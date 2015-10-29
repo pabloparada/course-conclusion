@@ -95,7 +95,11 @@ A Teoria das Categorias desempenha um papel importante na matemática, sendo cap
 
 De todas as construções algébricas oriundas desta teoria, Mónade destaca-se como a estrutura com maior aplicação em linguagens funcionais. Em seu trabalho, Hughes~\cite{hughes2000generalising} define mónade como um tipo de interface padronizada. Um mónade é construído a partir de um tipo polimórfico. Pode ser imaginado como um recipiente que encapsula um valor. Para modificar o valor do recipiente, aplicam-se funções. O contexto computacional definido pelo recipiente determina o valor resultante desta aplicação.
 
-O conceito de flecha abstrai uma computação e generaliza mónade. Esta permite a definição de uma computação parcialmente estática, geralmente que dependa do seus tipos de entrada. A instância chamada Flecha de Kleisli fornece o operador de composição monádica. Seu funcionamento é análogo a mónade, onde valores são encapsulados em flechas e modificados pela aplicação de funções em seu contexto.
+As poderosas abstrações monádicas contribuem na escrita de programas concorrentes, tornando-os mais próximos do paradigma imperativo. Em ambientes distribuídos, mónades fornecem meios de computação em nuvem abstraindo o modelo MapReduce e trabalhando com terabytes de dados~\cite{dean2008mapreduce, dzik2013mbrace}. Além disso, formam a base para memória transacional em software~\cite{jones2007beautiful} e atenuam a complexidade derivada do ambiente concorrente.
+
+O conceito de flecha abstrai uma computação e generaliza mónade. Esta construção permite a definição de uma computação parcialmente estática, que geralmente depende dos tipos de entrada. A instância chamada Flecha de Kleisli fornece o operador de composição monádica. Seu funcionamento é análogo a mónade, onde valores são encapsulados em flechas e modificados pela aplicação de funções em seu contexto.
+
+As propriedades intrínsecas da estrutura flecha fornecem os blocos básicos para a solução de problemas na computação. Em seu trabalho, Swierstra e Duponcheel propõem a substituição da estrutura monádica pela flecha na construção de analisadores sintáticos para gramáticas LL1~\cite{swierstra1996deterministic}. A partir de flechas, a biblioteca Fruit permite a construção de interfaces gráficas reativas de forma declarativa~\cite{courtney2001genuinely, courtney2003yampa}. Por último mas não menos importante, a instância Kleisli encapsula estruturas monádicas fornecendo uma maneira concisa de descrever a composição destas.
 
 A semântica presente em linguagens funcionais encontrou seu lugar na última versão da linguagem Java através das lambda expressions. A união desta com recursos como interfaces, métodos polimórficos, tipos genéricos e herança abre espaço para a construção das estruturas mónade e flecha. 
 
@@ -754,12 +758,6 @@ Para manter a consistência na implementação de $Kleisli$, o método $andThen$
 
 \subsection{Implementação de $Kleisli$}
 
-A implementação da classe $Kleisli$ na Listagem~\ref{lst:java-right-kleisli-instance} contem os tipos genéricos $M$, $B$ e $C$. Como esta trabalha sob tipos monádicos e suas composições, $M$ é declarado como sendo um $Monad$ e representa o retorno da função encapsulada por $Kleisli$. O tipo $B$ é a entrada da função e $C$ o valor encapsulado no contexto de $M$, dado por $M(C)$.
-
-Semelhante a $Monad$, valores são incluídos no contexto de $Kleisli$ a partir construtor de classe. Este recebe uma função $B \rightarrow M$ que é armazenada e está disponível no escopo de classe. A aplicação da função encapsulada é disponibilizada pelo método $run$.
-
-O operador de composição é expresso pelo método $andThen$. Apesar de conter diversas declarações de tipos genéricos na assinatura do método, $andThen$ recebe uma instancia de $Kleisli$ parametrizada por $M(D)$, $C$ e $D$. Deste argumento dá-se a composição, onde o valor de $C$ resultante da aplicação de $B \rightarrow M(C)$ é passada para $C \rightarrow M(D)$ de $k$. Deste encadeamento obtemos uma nova instancia de $Kleisli$ definida por $M(D)$, $B$ e $D$.
-
 \begin{lstlisting}[float = *, caption = {Implementação de $Kleisli$}, label = {lst:java-right-kleisli-instance}]
 public class Kleisli<M extends Monad<?, ?>, B, C> {
 
@@ -778,6 +776,12 @@ public class Kleisli<M extends Monad<?, ?>, B, C> {
 	}
 }
 \end{lstlisting}
+
+A implementação da classe $Kleisli$ na Listagem~\ref{lst:java-right-kleisli-instance} contem os tipos genéricos $M$, $B$ e $C$. Como esta trabalha sob tipos monádicos e suas composições, $M$ é declarado como sendo um $Monad$ e representa o retorno da função encapsulada por $Kleisli$. O tipo $B$ é a entrada da função e $C$ o valor encapsulado no contexto de $M$, dado por $M(C)$.
+
+Semelhante a $Monad$, valores são incluídos no contexto de $Kleisli$ a partir construtor de classe. Este recebe uma função $B \rightarrow M$ que é armazenada e está disponível no escopo de classe. A aplicação da função encapsulada é disponibilizada pelo método $run$.
+
+O operador de composição é expresso pelo método $andThen$. Apesar de conter diversas declarações de tipos genéricos na assinatura do método, $andThen$ recebe uma instancia de $Kleisli$ parametrizada por $M(D)$, $C$ e $D$. Deste argumento dá-se a composição, onde o valor de $C$ resultante da aplicação de $B \rightarrow M(C)$ é passada para $C \rightarrow M(D)$ de $k$. Deste encadeamento obtemos uma nova instancia de $Kleisli$ definida por $M(D)$, $B$ e $D$.
 
 Com a implementação de $Kleisli$ é possível compor mónades de forma semelhante a cadeia de $flatMap$ e $map$. Na Listagem~\ref{lst:monad-kleisli-composition} $f$, $g$ e $h$ expressam funções na forma ${A \rightarrow M(B)}$, mais precisamente ${Integer \rightarrow Maybe(Integer)}$. O método $andThen$ em conjunto com $run$ consegue aplicar o valor passado como argumento na função encapsulada e repassa-lo para outras flechas, encadeando os valores entre as mónades.
 
@@ -828,6 +832,13 @@ Na computação quântica, Crestani e Kaizer~\cite{crestani2013quantum} utilizam
 Em ambos trabalhos as mónades implementadas não extendem um contrato genérico $Monad$~(\ref{lst:monad-interface}). Além disso, estas mónades são compostas pelos métodos fornecidos em suas instâncias, isto é, sem a utilização de abstrações como $Kleisli$~(\ref{lst:java-right-kleisli-instance}).
 
 \section{CONCLUSÃO}
+
+Em trabalhos relacionados Du Bois e Echevarria~\cite{dubois2009domainspecific} apresentam CMTJava, uma linguagem de domínio específico para compor transações em memória. Transações são implementadas por uma mónade de passagem de estado com funções BBGA\footnote{Projeto de extensão da linguagem Java que tinha como proposta suportar lambda expressions.}. A mónade $STM$ encapsula valores do tipo $A$ e controla o acesso a memória compartilhada na concorrência computacional. O método $stmreturn$ insere qualquer valor do tipo $A$ no contexto da mónade resultando na criação de uma simples transação. A combinação de diferentes transações é disponibilizada através do método $bind$, que tem como argumento uma transação do tipo $STM(A)$ e uma função $A \rightarrow STM(B)$.
+
+Na computação quântica, Crestani e Kaizer~\cite{crestani2013quantum} utilizam o conceito de mónade para a construção de abstrações de algoritmos quânticos. A mónade quântica encapsula valores do tipo $A$ em vetores quânticos $Vec(A)$. O método $qreturn$ recebe um argumento de tipo $A$ e constrói estados quânticos retornando instâncias $Vec(A)$. Transformações quânticas são representadas por $Lin(A, B)$ e descrevem transformações $A \rightarrow V(B)$ encadeadas por $bind$.
+
+Em ambos trabalhos as mónades implementadas não extendem um contrato genérico $Monad$~(\ref{lst:monad-interface}). Além disso, estas mónades são compostas pelos métodos fornecidos em suas instâncias, isto é, sem a utilização de abstrações como $Kleisli$~(\ref{lst:java-right-kleisli-instance}).
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
