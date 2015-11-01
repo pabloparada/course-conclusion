@@ -1,7 +1,7 @@
 \documentclass[10pt, conference]{IEEEtran}
 
 % libraries preamble
-\usepackage[numbers,sort&compress,square]{natbib}
+\usepackage[numbers,sort,square]{natbib}
 \usepackage{listings}
 \usepackage{lipsum}
 \usepackage[T1]{fontenc}
@@ -54,6 +54,9 @@
 
 % keyword rename
 \renewcommand\IEEEkeywordsname{Palavras-chave}
+
+\pagenumbering{arabic}
+\pagestyle{plain}
 
 \begin{document}
 \bstctlcite{IEEEexample:BSTcontrol}
@@ -408,7 +411,7 @@ A introdução da mónade para E/S (entrada e saída) padronizou a maneira de ex
 
 Com a rápida adoção de mónades para a solução de problemas envolvendo E/S, constatou-se que outros conceitos da TC também poderiam ser aproveitados. Qualquer estrutura recursiva (listas, mapas, árvores, grafos) que possa ser iterada é representada por um funtor. A categoria de Haskell, chamada Hask, preocupa-se em tratar tipos como objetos e funções como morfismos, fornecendo funções de composição e identidade.
 
-Type classes definem comportamentos genéricos que podem ser implementados por um conjunto variado de tipos. Esta funcionalidade tornou a implementação das estruturas previamente mencionadas disponíveis para qualquer tipo de dado, dependendo apenas da implementação de suas instancias~\cite{o2008real}.
+Type classes definem comportamentos genéricos que podem ser implementados por um conjunto variado de tipos. Esta funcionalidade tornou a implementação das estruturas previamente mencionadas disponíveis para qualquer tipo de dado, dependendo apenas da implementação de suas instâncias~\cite{o2008real}.
 
 \begin{figure}[h]
 \centering
@@ -439,6 +442,7 @@ class Eq a where
 
 Na Listagem~\ref{lst:instance-eq}, instancia-se $Eq$ para os tipos $Int$ e $Char$. A primeira instancia declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parâmetro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
 
+\noindent\begin{minipage}[h]{\columnwidth}
 \begin{lstlisting}[caption={Instancias Eq\protect\footref{fnt:type-class-eq}}, label={lst:instance-eq}]
 instance Eq Int where
 	equals = primEqInt
@@ -446,6 +450,7 @@ instance Eq Int where
 instance Eq Char where
 	equals = primEqChar
 \end{lstlisting}
+\end{minipage}
 	
 \addtocounter{footnote}{1}
 \footnotetext{Fonte: C. V. Hall \textit{et al.}, Type Classes in Haskell, p. 3, 1996.\label{fnt:type-class-eq}}
@@ -540,12 +545,13 @@ instance Arrow (->) where
 
 Além disso, a definição do tipo $Kleisli$ para $Arrow$ na Listagem~\ref{lst:kleisli-type} e~\ref{lst:kleisli-arrow} provê a composição de mónades. Os tipos de entrada e saída são definidos explicitamente em $Kleisli$, diferentemente de $Monad$. Portanto, ${Arrow\;(Kleisli\;m)}$ generaliza $Monad$~\cite{hughes2005programming}.
 
+\noindent\begin{minipage}[b]{\columnwidth}
 \begin{lstlisting}[caption={Definição do tipo $Kleisli$\protect\footref{fnt:prog-with-arrows}}, label={lst:kleisli-type}]
 newtype Kleisli m a b = Kleisli { 
 	runKleisli :: a -> m b 
 }
 \end{lstlisting}
-
+\end{minipage}
 
 \begin{lstlisting}[caption={Instância para $Monad$\protect\footref{fnt:prog-with-arrows}}, label={lst:kleisli-arrow}]
 instance Monad m => Arrow (Kleisli m) where
@@ -654,8 +660,6 @@ public interface Maybe<A> extends Monad<A, Maybe<?>> {
 \begin{lstlisting}[caption = {Classe $Just$}, label = {lst:just-class}]
 public class Just<A> implements Maybe<A> {
 
-	...
-
 	public Just(A value) {
 		this.value = value;
 	}
@@ -673,11 +677,7 @@ O tipo $Maybe$ é uma mónade que encapsula um valor opcional. Esta pode conter 
 
 \begin{lstlisting}[caption = {Classe $Nothing$}, label = {lst:nothing-class}]
 public class Nothing<A> implements Maybe<A> {
-
 	public Nothing() {}
-    
-	...
-
 }
 \end{lstlisting}
 
@@ -705,7 +705,6 @@ public void rightIdentity() {
 	assertEquals(m.flatMap(Just::pure), m);
 }
 
-
 public void associativity() {
 	assertEquals(m.flatMap(f).flatMap(g), m.flatMap(x -> f.apply(x).flatMap(g)));
 }
@@ -723,6 +722,8 @@ Na declaração de $Arrow$ na Listagem~\ref{lst:java-arrow-interface}, a interfa
 
 Assim como $Monad$, subclasses de $Arrow$ devem utilizar seus construtores para incluir $B \rightarrow C$ em seus contextos. Além disso, o método $andThen$ define a composição de $Arrow$ por $A(B, D) = A(B, C) \circ A(C, D)$.
 
+\bigskip
+
 \begin{lstlisting}[caption = {Interface $Arrow$}, label = {lst:java-arrow-interface}]
 interface Arrow<A extends Kind<?, ?>, B, C> {
 	<D, AD extends Kind<D, ?>> Arrow<AD, B, D> andThen(Arrow<AD, C, D> k);
@@ -733,6 +734,8 @@ A Listagem~\ref{lst:java-wrong-kleisli-instance} declara a classe $Kleisli$. Est
 
 
 Como $Kleisli$ trabalha com tipos monádicos, seu primeiro parâmetro de tipo impõe uma ligação entre $M$ e $Monad$. O tipo genérico $A$ define a entrada da função encapsulada pelo construtor de classe e $B$ o valor encapsulado pela mónade $M$. Além disso, os tipos genéricos declarados em $Kleisli$ são repassados para $Arrow$ e consequentemente formam os tipos de entrada e saída dos métodos sobrescritos.
+
+\bigskip\bigskip\bigskip
 
 \begin{lstlisting}[caption = {Implementação concreta da interface $Arrow$}, label = {lst:java-wrong-kleisli-instance}]
 public class Kleisli<M extends Monad<B, ?>, A, B> implements Arrow<M, A, B> {
@@ -780,6 +783,7 @@ O operador de composição é expresso pelo método $andThen$. Apesar de conter 
 
 Com a implementação de $Kleisli$ é possível compor mónades de forma semelhante a cadeia de $flatMap$ e $map$. Na Listagem~\ref{lst:monad-kleisli-composition} $f$, $g$ e $h$ expressam funções na forma ${A \rightarrow M(B)}$, mais precisamente ${Integer \rightarrow Maybe(Integer)}$. O método $andThen$ em conjunto com $run$ consegue aplicar o valor passado como argumento na função encapsulada e repassa-lo para outras flechas, encadeando os valores entre as mónades.
 
+\noindent\begin{minipage}[b]{\columnwidth}
 \begin{lstlisting}[caption = {Composição monádica com $andThen$}, label = {lst:monad-kleisli-composition}]
 Kleisli<Maybe<Integer>, Integer, Integer> f() {
 	return new Kleisli<>(i -> Just.pure(i + 1));
@@ -796,6 +800,7 @@ Kleisli<Maybe<Integer>, Integer, Integer> h() {
 h().andThen(f().andThen(g())).run(5);
 
 \end{lstlisting}
+\end{minipage}
 
 $Kleisli$ mantém as regras das estruturas subjacentes. A aplicação de $h$, $f$, $g$ e $run(5)$ por $andThen$ resulta em uma instância $Just(10)$. De maneira semelhante, se umas destas funções retornar  $Nothing$, a cadeia não é executada e retorna este como resultado final.
 
