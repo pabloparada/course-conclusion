@@ -1,7 +1,7 @@
 \documentclass[10pt, conference]{IEEEtran}
 
 % libraries preamble
-\usepackage[numbers,sort,square]{natbib}
+\usepackage[numbers,sort, square]{natbib}
 \usepackage{listings}
 \usepackage{lipsum}
 \usepackage[T1]{fontenc}
@@ -80,7 +80,7 @@
 \maketitle
 
 \begin{abstract}
-A exótica Teoria das Categorias contribui para diversas áreas da computação, principalmente no modelo semântico de linguagens de programação e em técnicas aplicadas em linguagens funcionais. Duas de suas abstrações, chamadas respectivamente de mónade e flecha formam os blocos básicos para a solução de problemas em linguagens funcionais. Com adição de lambda expressions, a linguagem Java adentra no mundo do paradigma funcional. As estruturas citadas estão presentes em trabalhos e bibliotecas, populando a plataforma com novas funcionalidades. Entretanto, cada instância é implementada a sua maneira, geralmente atentando apenas para a solução de um problema específico. Este trabalho apresenta a implementação de uma interface genérica para mónade, o operador de composição descrito por flecha e os axiomas que regem estas estruturas. Desta forma, a generalização destas estruturas é garantida por uma interface comum, facilitando a implementação de outros conceitos advindos desta teoria. Além do mais, o ecossistema da linguagem é incrementado fornecendo novas abrações para seus usuários.\\
+A exótica Teoria das Categorias contribui para diversas áreas da computação, principalmente no modelo semântico de linguagens de programação e em técnicas aplicadas em linguagens funcionais. Duas de suas abstrações, chamadas respectivamente de mónade e flecha formam os blocos básicos para a solução de problemas em linguagens funcionais. Com adição de lambda expressions, a linguagem Java adentra no mundo do paradigma funcional. As estruturas citadas estão presentes em diversos trabalhos e bibliotecas, populando a plataforma com novas funcionalidades. Entretanto, cada instância é implementada a sua maneira, geralmente atentando apenas para a solução de um problema específico. Este trabalho apresenta a implementação de uma interface genérica para mónade, o operador de composição descrito por flecha e os axiomas que regem estas estruturas. Desta forma, a generalização destas estruturas é garantida por uma interface comum, facilitando a implementação de outros conceitos advindos desta teoria. Além do mais, o ecossistema da linguagem é incrementado fornecendo novas abrações para seus usuários.\\
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -833,14 +833,11 @@ Em ambos trabalhos as mónades implementadas não extendem um contrato genérico
 
 \section{CONCLUSÃO}
 
-Esta implementação pode servir como guia para trabalhos futuros na implementação de outros conceitos advindos da Teoria das Categorias. No futuro, a linguagem pode aproveitar a generalização destas estruturas e fornecer uma sintaxe específica para mónade.
+Este trabalho demonstrou a construção da interface monádica, instância de flecha  $Kleisli$ e a garantia de coesão dada pelos axiomas destas estruturas. Diferentemente de linguagens funcionais, tipos construtores não são suportados em Java e foram simulados a partir da interface $Kind$. Além disso, outras limitações de tipos genéricos e herança impossibilitaram a construção de uma interface para flecha.
 
-Em trabalhos relacionados Du Bois e Echevarria~\cite{dubois2009domainspecific} apresentam CMTJava, uma linguagem de domínio específico para compor transações em memória. Transações são implementadas por uma mónade de passagem de estado com funções BBGA\footnote{Projeto de extensão da linguagem Java que tinha como proposta suportar lambda expressions.}. A mónade $STM$ encapsula valores do tipo $A$ e controla o acesso a memória compartilhada na concorrência computacional. O método $stmreturn$ insere qualquer valor do tipo $A$ no contexto da mónade resultando na criação de uma simples transação. A combinação de diferentes transações é disponibilizada através do método $bind$, que tem como argumento uma transação do tipo $STM(A)$ e uma função $A \rightarrow STM(B)$.
+Desse modo, incrementou-se o suporte ao paradigma funcional na plataforma Java. Estruturas singulares podem unificar-se por uma única interface. A composição destas tornou-se polimórfica, expressada pela instância $Kleisli$ e generalizada por $Monad$. Este mesmo polimorfismo também é oferecido para desenvolvedores que desejam criar bibliotecas, onde torna-se necessário referenciar apenas interfaces padronizadas.
 
-Na computação quântica, Crestani e Kaizer~\cite{crestani2013quantum} utilizam o conceito de mónade para a construção de abstrações de algoritmos quânticos. A mónade quântica encapsula valores do tipo $A$ em vetores quânticos $Vec(A)$. O método $qreturn$ recebe um argumento de tipo $A$ e constrói estados quânticos retornando instâncias $Vec(A)$. Transformações quânticas são representadas por $Lin(A, B)$ e descrevem transformações $A \rightarrow V(B)$ encadeadas por $bind$.
-
-Em ambos trabalhos as mónades implementadas não extendem um contrato genérico $Monad$~(\ref{lst:monad-interface}). Além disso, estas mónades são compostas pelos métodos fornecidos em suas instâncias, isto é, sem a utilização de abstrações como $Kleisli$~(\ref{lst:java-right-kleisli-instance}).
-
+Com o incremento na inferência de tipos do compilador, no futuro tais implementações podem ser simplificadas. Outras estruturas oriundas da Teoria das Categorias carecem de implementação e podem novamente incrementar a plataforma.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
