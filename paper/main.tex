@@ -80,7 +80,7 @@
 \maketitle
 
 \begin{abstract}
-A exótica Teoria das Categorias contribui para diversas áreas da computação, principalmente no modelo semântico de linguagens de programação e em técnicas aplicadas em linguagens funcionais. Duas de suas abstrações, chamadas respectivamente de mónade e flecha formam os blocos básicos para a solução de problemas em linguagens funcionais. Com adição de lambda expressions, a linguagem Java adentra no mundo do paradigma funcional. As estruturas citadas estão presentes em diversos trabalhos e bibliotecas, populando a plataforma com novas funcionalidades. Entretanto, cada instância é implementada a sua maneira, geralmente atentando apenas para a solução de um problema específico. Este trabalho apresenta a implementação de uma interface genérica para mónade, o operador de composição descrito por flecha e os axiomas que regem estas estruturas. Desta forma, a generalização destas estruturas é garantida por uma interface comum, facilitando a implementação de outros conceitos advindos desta teoria. Além do mais, o ecossistema da linguagem é incrementado fornecendo novas abrações para seus usuários.\\
+A não convencional Teoria das Categorias contribui para diversas áreas da computação, principalmente no modelo semântico de linguagens de programação e em técnicas aplicadas em linguagens funcionais. Duas de suas abstrações, chamadas respectivamente de mónade e flecha formam os blocos básicos para a solução de problemas em linguagens funcionais. Com adição de lambda expressions, a linguagem Java adentra no mundo do paradigma funcional. As estruturas citadas estão presentes em diversos trabalhos e bibliotecas, populando a plataforma com novas funcionalidades. Entretanto, cada instância é implementada a sua maneira, geralmente atentando apenas para a solução de um problema específico. Este trabalho apresenta a implementação de uma interface genérica para mónade, o operador de composição descrito por flecha e os axiomas que regem estas estruturas. Desta forma, a generalização destas estruturas é garantida por uma interface comum, facilitando a implementação de outros conceitos advindos desta teoria. Além do mais, o ecossistema da linguagem é incrementado fornecendo novas abstrações para seus usuários.\\
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -98,11 +98,13 @@ As poderosas abstrações monádicas contribuem na escrita de programas concorre
 
 O conceito de flecha abstrai problemas computacionais e generaliza mónade. Esta construção permite a definição de uma computação parcialmente estática, que geralmente depende dos tipos de entrada. Seu funcionamento é análogo a mónade, onde valores são encapsulados em flechas e modificados pela aplicação de funções em seu contexto.
 
-As propriedades intrínsecas desta estrutura fornecem os blocos básicos para a solução de problemas na computação. Em seu trabalho, Swierstra e Duponcheel propõem a substituição da estrutura monádica pela flecha na construção de analisadores sintáticos para gramáticas LL1~\cite{swierstra1996deterministic}. A partir de flechas, a biblioteca Fruit permite a construção de interfaces gráficas reativas de forma declarativa~\cite{courtney2001genuinely, courtney2003yampa}. Por último mas não menos importante, a instância Kleisli encapsula estruturas monádicas fornecendo uma maneira concisa de descrever a composição destas.
+As propriedades intrínsecas desta estrutura fornecem os blocos básicos para a solução de problemas na computação. Em seu trabalho, Swierstra e Duponcheel propõem a substituição da estrutura monádica pela flecha na construção de analisadores sintáticos para gramáticas LL1~\cite{swierstra1996deterministic}. A partir de flechas, a biblioteca Fruit permite a construção de interfaces gráficas reativas de forma declarativa~\cite{courtney2001genuinely, courtney2003yampa}. A instância Kleisli encapsula estruturas monádicas fornecendo uma maneira concisa de descrever a composição destas.
 
 A oitava distribuição da linguagem Java adicionou as funcionalidades necessárias para habilitar o uso de funções de primeira classe. Conhecidas como lambda expression, estas adicionam caraterísticas presentes principalmente em linguagens funcionais. Com isto, estruturas da Teoria das Categorias tornam-se cada vez mais presentes na plataforma.
 
 Tanto bibliotecas quanto trabalhos das mais diversas áreas da computação descrevem estruturas monádicas~\cite{crestani2013quantum, dubois2009domainspecific, urma2014java} na linguagem Java. Entretanto, cada instância é implementada a sua maneira, muitas das vezes atentando apenas para a solução de um problema específico. Este trabalho apresenta a implementação de uma interface genérica para mónade, o operador de composição descrito por flecha e os axiomas que regem estas estruturas. Embora a Java não possua todos os recursos presentes em linguagens funcionais, ainda assim é possível expressar estes conceitos com os recursos existentes.
+
+O restante deste artigo é organizado da seguinte forma. Seção~\ref{sec:func-para} e~\ref{sec:lambda-expr} elucida as características do paradigma funcional e a sua adoção pela linguagem Java a partir do recurso de lambda expressions. Com ampla utilização em linguagens funcionais, mónades e flechas são descritas formalmente na Seção~\ref{sec:cat-struct}. Na direção de aplicações práticas, a Seção~\ref{sec:hask-apply} fornece implementações destas estruturas, seguida pela Seção~\ref{sec:java-apply} com o desenvolvimento proposto neste trabalho. Os resultados obtidos no desenvolvimento de mónades e flechas são discutidos nas Seções~\ref{sec:related-work} e~\ref{sec:conc}.
 
 \section{PARADIGMA FUNCIONAL}
 \label{sec:func-para}
@@ -116,6 +118,7 @@ Tais propriedades são apreciadas nos tempos atuais, visto que a Lei de Moore no
 O paradigma funcional expressa programas através de composições mantendo a imutabilidade e a transparência referencial, portanto apresenta caraterísticas importantes para os tempos atuais. A complexidade intrínseca à ambientes distribuídos é reduzida. Programas completos são vistos como apenas uma aplicação de função.
 
 \section{JAVA LAMBDA EXPRESSIONS}
+\label{sec:lambda-expr}
 
 Na última década muitos dos problemas encontrados -- como enviar não só dados, mas também comandos através de redes -- já foram solucionados em linguagens que suportam o paradigma funcional~\cite{fischer2015java}. Assim, linguagens multi-paradigma têm adicionado suporte à estas mesmas estruturas, aumentando sua flexibilidade e ganho para com os desenvolvedores. O suporte a lambda expressions em Java não tem como objetivo apenas substituir Anonymous Inner Classes, mas também ser capaz de trazer os benefícios deste paradigma ao ponto de incrementar o ecossistema da linguagem.
 
@@ -147,6 +150,7 @@ Diferentemente de AIC, lambdas postergam a estratégia de compilação para em t
 Dessa forma, o suporte a lambda expressions traz benefícios para os usuários da linguagem. Tal funcionalidade está além de uma mera substituição, pois acrescenta um novo paradigma no ecossistema Java.
 
 \section{TEORIA DAS CATEGORIAS E SUAS ESTRUTURAS}
+\label{sec:cat-struct}
 A Teoria das Categorias (TC) foi inventada no início dos anos 1940 por Samuel Eilenberg e Sunders Mac Lane~\cite{eilenbergmaclane1945naturalequivalences} como uma ponte entre os diferentes campos da topologia e álgebra~\cite{spivak2014cts}. Afim de demonstrar as relações entre estruturas e sistemas matemáticos~\cite{maclane1971mat}, a TC estabelece uma linguagem formal capaz de encontrar aplicabilidade em várias áreas da ciência. Por volta dos anos 1980, computação e TC passaram a ser consideradas áreas correlatas de estudo~\cite{carlos2006caracteristicas}.
 
 Aplicações do modelo categorial ocorrem na composição de funções encorajada pelo paradigma funcional. Além do mais, em linguagens de programação, o estudo dos tipos pode ser representado através de categorias. Muitos modelos computacionais que fazem uso de estruturas de dados como grafos podem ser generalizados para categorias de grafos. Portanto, tais aplicações demonstram a capacidade de abstração e a importância da TC para a computação.
@@ -404,8 +408,8 @@ Similar as outras estruturas desta seção, $C_T$ deve obedecer as seguintes lei
 \bigskip
 
 \section{APLICAÇÃO EM HASKELL}
-
-As funções do paradigma funcional podem ser vistas como morfismos na categoria dos tipos. Percebendo estas relações, Wadler~\cite{peyton1993imperative, wadler1995monads, wadler1992comprehending, wadler1992essence} utilizou o conceito de mónade para estruturar programas puramente funcionais em Haskell. Assim, o primeiro problema pertencente ao conjunto Awkward Squad foi solucionado~\cite{jones2001tacklingthe}.
+\label{sec:hask-apply}
+As funções do paradigma funcional podem ser vistas como morfismos na categoria dos tipos. Percebendo estas relações, Wadler~\cite{peyton1993imperative, wadler1995monads, wadler1992comprehending, wadler1992essence} utilizou o conceito de mónade para estruturar programas puramente funcionais em Haskell. Assim, o primeiro problema pertencente ao conjunto Awkward Squad\footnote{Conjunto de questões cruciais  relacionadas a linguagens funcionais sem resposta até o surgimento de mónades.} foi solucionado~\cite{jones2001tacklingthe}.
 
 A introdução da mónade para E/S (entrada e saída) padronizou a maneira de executar  estas ações e encapsular seus efeitos colaterais. Assim, outras mónades foram adicionadas à linguagem, estendendo as bibliotecas padrões para fornecer suporte a exceções, nulidade, concorrência, etc. Logo, mónades trouxeram utilidade para a linguagem, pois confrontaram o Awkward Squad~\cite{jones2001tacklingthe}.
 
@@ -423,7 +427,7 @@ Type classes definem comportamentos genéricos que podem ser implementados por u
 	\label{fig:typeclassopedia}
 \end{figure}
 	
-Conforme a Typeclassopedia, a Figura~\ref{fig:typeclassopedia} demonstra as relações entre as type classes, identificadas por flechas tracejadas e pontilhadas:
+Conforme a Typeclassopedia, a Figura~\ref{fig:typeclassopedia} demonstra as relações entre as type classes, identificadas por linhas contínuas e tracejadas:
 
 \begin{enumerate}[label=(\alph*), leftmargin=3em, topsep = 0pt, itemsep = 1ex, partopsep = 1ex, parsep = 1ex]
 	\item (\textit{Tracejadas}) Determinam relações de é-um, ou seja, se existe uma flecha de $A$ para $B$, então todo $B$ é um $A$;
@@ -437,10 +441,10 @@ class Eq a where
 	equals :: a -> a -> Bool
 \end{lstlisting}
 
-Na Listagem~\ref{lst:instance-eq}, instancia-se $Eq$ para os tipos $Int$ e $Char$. A primeira instancia declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parâmetro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
+Na Listagem~\ref{lst:instance-eq}, instância-se $Eq$ para os tipos $Int$ e $Char$. A primeira instância declara que $Int$ pertence a $Eq$, e que a implementação de igualdade de inteiros é dada por $primEqInt$. Similarmente, $Char$ pertence $Eq$ e fornece a implementação de igualdade por $primEqChar$. Logo, como $a$ é um parâmetro de tipo, as assinaturas de $primEqInt$ e $primEqChar$ são tipadas ${Int \rightarrow Int \rightarrow Bool}$ e ${Char \rightarrow Char \rightarrow Bool}$ consecutivamente~\cite{hall1996type}.
 
 \noindent\begin{minipage}[h]{\columnwidth}
-\begin{lstlisting}[caption={Instancias Eq\protect~\cite{hall1996type}}, label={lst:instance-eq}]
+\begin{lstlisting}[caption={Instâncias Eq\protect~\cite{hall1996type}}, label={lst:instance-eq}]
 instance Eq Int where
 	equals = primEqInt
 	
@@ -449,7 +453,7 @@ instance Eq Char where
 \end{lstlisting}
 \end{minipage}
 
-Com a instancia de $Eq \; Int$ é possível comparar dois inteiros tal que ${equals({1 + 1}, 2)}$ retorna $True$; ou ${equals({1 + 1}, 0)}$ retorna $False$. De maneira similar, com $Eq \; Char$ é possível comparar dois caracteres, onde ${equals('a', {'a'})}$ retorna $True$; ou ${equals('a', {'b'})}$ retorna $False$.
+Com a instância de $Eq \; Int$ é possível comparar dois inteiros tal que ${equals({1 + 1}, 2)}$ retorna $True$; ou ${equals({1 + 1}, 0)}$ retorna $False$. De maneira similar, com $Eq \; Char$ é possível comparar dois caracteres, onde ${equals('a', {'a'})}$ retorna $True$; ou ${equals('a', {'b'})}$ retorna $False$.
 
 \subsection{Monad}
 
@@ -464,7 +468,7 @@ class Monad m where
 
 Conforme a Listagem~\ref{lst:type-class-monad}, a type class $Monad$ consiste em um tipo construtor $m$ e as operações $>>=$, $>>$ e $return$. A operação $>>$ existe apenas como um facilitador para a composição de funções no contexto $m$. $>>=$ e $return$ são equivalentes as transformações naturais de multiplicação e identidade.
 
-A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é $bind$, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. $Bind$ aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando uma nova instancia de $Monad$ do tipo $m\;b$.
+A operação $return$ encapsula o tipo $a$ no contexto monádico $m\;a$ e retorna este como resultado. A próxima é $bind$, declarada simbolicamente por $>>=$, que habilita o encadeamento de funções. $Bind$ aplica a função $a \rightarrow m\;b$ no contexto monádico $m\;a$, retornando uma nova instância de $Monad$ do tipo $m\;b$.
 
 Todas instâncias de $Monad$ devem seguir as leis monádicas de associatividade e identidade. Estes axiomas são demonstrados na Listagem~\ref{lst:monad-laws}.
 
@@ -520,7 +524,7 @@ Destas, a mais comum é $arr$, declarada com a assinatura ${(b \rightarrow c) \r
 
 A segunda operação é definida simbolicamente por $(>>>)$ com assinatura ${a\;b\;c \rightarrow a\;c\;d \rightarrow a\;b\;d}$. Recebe como argumento uma instância definida por ${a\;c\;d}$ e retorna $a\;b\;d$. Logo, $(>>>)$ aplica sequencialmente as funções passadas para $arr$, gerando uma computação de entrada $b$ e saída $d$ encapsuladas em uma instância de $Arrow$.
 
-Tem-se na Listagem~\ref{lst:func-comp-arrow} uma instancia de $Arrow$ que fornece a composição de funções ordinárias. Nesta, $arr$ é implementada pela função de identidade $id$, disponível no pacote $Prelude$. Na operação de composição $(>>>)$, utiliza-se $(.)$ e $flip$~\cite{hughes2005programming}. Assim, define-se o tipo ${Arrow\;(\rightarrow)}$,  instancia de $Arrow$ para funções ordinárias. Sua assinatura é dada por $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
+Tem-se na Listagem~\ref{lst:func-comp-arrow} uma instância de $Arrow$ que fornece a composição de funções ordinárias. Nesta, $arr$ é implementada pela função de identidade $id$, disponível no pacote $Prelude$. Na operação de composição $(>>>)$, utiliza-se $(.)$ e $flip$~\cite{hughes2005programming}. Assim, define-se o tipo ${Arrow\;(\rightarrow)}$,  instância de $Arrow$ para funções ordinárias. Sua assinatura é dada por $a \rightarrow b$, sendo $a$ e $b$ tipos quaisquer.
 
 \begin{lstlisting}[caption={Arrow - Composição de Funções~\cite{hughes2005programming}}, label={lst:func-comp-arrow}]
 instance Arrow (->) where
@@ -561,7 +565,7 @@ arr (g . f) = arr f >>> arr g
 \end{lstlisting}
 
 \section{Aplicação em Java}
-
+\label{sec:java-apply}
 A linguagem Java originou-se a partir de um projeto de pesquisa, tendo como
 objetivo de desenvolver uma plataforma capaz de operar em tempo real. Em sua criação, decisões arquiteturais e de design foram embasadas em linguagens como SmallTalk, Eifell, Objective C e Cedar/Mesa~\cite{gosling1995java}. Para ser considerada uma linguagem orientada a objetos, Java suporta encapsulamento, polimorfismo e herança desde sua elaboração.
 
@@ -727,7 +731,7 @@ public class Kleisli<M extends Monad<B, ?>, A, B> implements Arrow<M, A, B> {
 }
 \end{lstlisting}
 
-Para manter a consistência na implementação de $Kleisli$, o método $andThen$ deve retornar uma instância de $Arrow$ onde $M(D)$ extenda $Monad$. Contudo, $Arrow$ impõe restrições através de $Kind$ e estas devem ser mantidas na subclassificação. Portanto, o retorno de $andThen$ definido por $Arrow$ não pode ser expresso em $Kleisli$. Assim, esta interface não é suficientemente genérica de modo que possa expressar as diferentes implementações de flechas. A implementação da flecha de $Kleisli$ deverá abrir mão do contrato genérico de $Arrow$.
+Para manter a consistência na implementação de $Kleisli$, o método $andThen$ deve retornar uma instância de $Arrow$ onde $M(D)$ estenda $Monad$. Contudo, $Arrow$ impõe restrições através de $Kind$ e estas devem ser mantidas na subclassificação. Portanto, o retorno de $andThen$ definido por $Arrow$ não pode ser expresso em $Kleisli$. Assim, esta interface não é suficientemente genérica de modo que possa expressar as diferentes implementações de flechas. A implementação da flecha de $Kleisli$ deverá abrir mão do contrato genérico de $Arrow$.
 
 \subsection{Implementação de $Kleisli$}
 
@@ -754,7 +758,7 @@ A implementação da classe $Kleisli$ na Listagem~\ref{lst:java-right-kleisli-in
 
 Semelhante a $Monad$, valores são incluídos no contexto de $Kleisli$ a partir construtor de classe. Este recebe uma função $B \rightarrow M$ que é armazenada e está disponível no escopo de classe. A aplicação da função encapsulada é disponibilizada pelo método $run$.
 
-O operador de composição é expresso pelo método $andThen$. Apesar de conter diversas declarações de tipos genéricos na assinatura do método, $andThen$ recebe uma instancia de $Kleisli$ parametrizada por $M(D)$, $C$ e $D$. Deste argumento dá-se a composição, onde o valor de $C$ resultante da aplicação de $B \rightarrow M(C)$ é passada para $C \rightarrow M(D)$ de $k$. Deste encadeamento obtemos uma nova instancia de $Kleisli$ definida por $M(D)$, $B$ e $D$.
+O operador de composição é expresso pelo método $andThen$. Apesar de conter diversas declarações de tipos genéricos na assinatura do método, $andThen$ recebe uma instância de $Kleisli$ parametrizada por $M(D)$, $C$ e $D$. Deste argumento dá-se a composição, onde o valor de $C$ resultante da aplicação de $B \rightarrow M(C)$ é passada para $C \rightarrow M(D)$ de $k$. Deste encadeamento obtemos uma nova instância de $Kleisli$ definida por $M(D)$, $B$ e $D$.
 
 Com a implementação de $Kleisli$ é possível compor mónades de forma semelhante a cadeia de $flatMap$ e $map$. Na Listagem~\ref{lst:monad-kleisli-composition} $f$, $g$ e $h$ expressam funções na forma ${A \rightarrow M(B)}$, mais precisamente ${Integer \rightarrow Maybe(Integer)}$. O método $andThen$ em conjunto com $run$ consegue aplicar o valor passado como argumento na função encapsulada e repassa-lo para outras flechas, encadeando os valores entre as mónades.
 
@@ -799,15 +803,15 @@ public void associativity() {
 \paragraph{Associatividade - $associativity$} as funções $f$, $g$ e $h$ com assinatura na forma $A \rightarrow M(B)$ são encapsuladas em instâncias de $Kleisli$ e compostas por $andThen$ em diferentes ordens. A associatividade é garantida pela aplicação de ambas cadeias de funções por $run(a)$ e a igualdade de seus resultados.
 
 \section{TRABALHOS RELACIONADOS}
-
+\label{sec:related-work}
 Em trabalhos relacionados Du Bois e Echevarria~\cite{dubois2009domainspecific} apresentam CMTJava, uma linguagem de domínio específico para compor transações em memória. Transações são implementadas por uma mónade de passagem de estado com funções BBGA\footnote{Projeto de extensão da linguagem Java que tinha como proposta suportar lambda expressions.}. A mónade $STM$ encapsula valores do tipo $A$ e controla o acesso a memória compartilhada na concorrência computacional. O método $stmreturn$ insere qualquer valor do tipo $A$ no contexto da mónade resultando na criação de uma simples transação. A combinação de diferentes transações é disponibilizada através do método $bind$, que tem como argumento uma transação do tipo $STM(A)$ e uma função $A \rightarrow STM(B)$.
 
 Na computação quântica, Crestani e Kaizer~\cite{crestani2013quantum} utilizam o conceito de mónade para a construção de abstrações de algoritmos quânticos. A mónade quântica encapsula valores do tipo $A$ em vetores quânticos $Vec(A)$. O método $qreturn$ recebe um argumento de tipo $A$ e constrói estados quânticos retornando instâncias $Vec(A)$. Transformações quânticas são representadas por $Lin(A, B)$ e descrevem transformações $A \rightarrow V(B)$ encadeadas por $bind$.
 
-Em ambos trabalhos as mónades implementadas não extendem um contrato genérico $Monad$~(\ref{lst:monad-interface}). Além disso, estas mónades são compostas pelos métodos fornecidos em suas instâncias, isto é, sem a utilização de abstrações como $Kleisli$~(\ref{lst:java-right-kleisli-instance}).
+Em ambos estudos as estruturas implementadas não estendem um contrato genérico $Monad$~(\ref{lst:monad-interface}). Estas são compostas pelos métodos fornecidos em suas instâncias, isto é, sem a utilização de abstrações como $Kleisli$~(\ref{lst:java-right-kleisli-instance}). Portanto, apesar de relacionadas, tais pesquisas são demasiadas específicas atendo-se apenas em seu tema principal e não corroboram com a construção de conceitos genéricos propostos por este trabalho.
 
 \section{CONCLUSÃO}
-
+\label{sec:conc}
 Este trabalho demonstrou a construção da interface monádica, instância de flecha  $Kleisli$ e a garantia de coesão dada pelos axiomas destas estruturas. Diferentemente de linguagens funcionais, tipos construtores não são suportados em Java e foram simulados a partir da interface $Kind$. Além disso, outras limitações de tipos genéricos e herança impossibilitaram a construção de uma interface para flecha.
 
 Dessa forma, incrementou-se o suporte ao paradigma funcional
