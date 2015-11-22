@@ -821,16 +821,15 @@ Em ambos estudos as estruturas implementadas não estendem um contrato genérico
 
 Este trabalho demonstrou a construção da interface monádica, instância de flecha  $Kleisli$ e a garantia de coesão dada pelos axiomas destas estruturas. Diferentemente de linguagens funcionais, tipos construtores não são suportados em Java e foram simulados a partir da interface $Kind$. Além disso, outras limitações de tipos genéricos e herança impossibilitaram a construção de uma interface para flecha.
 
-Apesar de demonstrar a implementação apenas para o tratamento de nulidade, mónades podem de fato servir como abstrações para concorrência. Uma implementação concreta da interface mónade pode encapsular funções e executa-las em um contexto contendo threads. Desta forma, o pacote de concorrência disponível em Java pode abstrair funções de baixo nível e trabalhar com uma interface genérica que facilite a construção de programas concorrentes.
+Apesar deste estudo demonstrar uma implementação apenas para o tratamento de nulidade, mónades podem de fato servir como abstrações para concorrência. Uma instância concreta da interface mónade pode encapsular funções e executa-las em um contexto contendo threads. Com isto, funcionalidades disponíveis no pacote de concorrência podem ser abstraídas facilitando a construção de programas concorrentes.
 
-Em ambientes distribuídos, muitas das vezes, faz-se necessário compartilhar valores entre diferentes máquinas. Outra importante implementação desta interface são as mónades de leitura e escrita. De forma similar a mónade de concorrência, tais mónades encapsulam funções que trabalham com estes valores e abstraem a complexidade do ambiente contido nestas aplicações.
+Em ambientes distribuídos, muitas das vezes, faz-se necessário compartilhar valores entre diferentes máquinas. Outra importante implementação da interface são as mónades de leitura e escrita. De forma similar a mónade de concorrência, tais mónades encapsulam funções que trabalham com estes valores e abstraem a complexidade do ambiente contido nestas aplicações.
 
-Por meio do polimorfismo obtido na implementação deste contrato, $Kleisli$ consegue generalizar a composição de todas as subclassificações de mónade. Esta instância permite a execução de funções de forma sequencial em ambos contextos monádicos, respeitando seus axiomas e mantendo suas estruturas. Portanto, é possível encadear diferentes computações através de diferentes mónades.
+Por meio do polimorfismo obtido na implementação do contrato monádico, $Kleisli$ conseguiu generalizar o operador de composição. Esta instância permitiu a execução de funções de forma sequencial em ambos contextos monádicos, respeitando seus axiomas e mantendo suas estruturas. Portanto, todas as derivações da interface mónade disponibilizadas neste trabalho são desenvolvidas individualmente, porém são compostas de maneira genérica pela flecha $Kleisli$.
 
-Dessa forma, incrementou-se o suporte ao paradigma funcional
-na plataforma Java. A composição destas construções tornaram-se polimórficas, expressadas pela instância $Kleisli$ e generalizadas pela interface $Monad$. Este mesmo polimorfismo também é oferecido para desenvolvedores que desejam criar bibliotecas, referenciando apenas interfaces padronizadas.
+Com o incremento na inferência de tipos do compilador tais estruturas podem ser simplificadas. A simulação de tipos construtores e as complicadas hierarquias de tipos devem ser substituídas por soluções nativas. Como possível trabalho futuro, diversas outras estruturas oriundas da Teoria das Categorias carecem de implementação. Assim, a implementação de contratos capazes de generalizar outras estruturas tornam-se relevantes.
 
-Com o incremento na inferência de tipos do compilador, no futuro tais implementações podem ser simplificadas. Outras estruturas oriundas da Teoria das Categorias carecem de implementação e podem novamente incrementar a plataforma.
+Este trabalho buscou fornecer novas funcionalidades a partir de recursos pré-existentes na linguagem Java. O suporte a lambda expressions e as estruturas advindas da teoria das categorias dão origem a soluções para problemas cada vez mais presentes na atualidade.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
