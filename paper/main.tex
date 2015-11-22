@@ -508,6 +508,8 @@ count w = length . filter (==w) . words
 A função $count$ é implementada pela união de $length$, $filter$, $==$ e $words$. Por último mas não menos importante, a função de composição $(.)$ atua na implementação de $count$ como um operador de ligação entre as funções menores. Entretanto, funções com efeitos colaterais não são compostas tão facilmente. 
 Conforme a Listagem~\ref{lst:func-io}, $readFile$ retorna um $String$ encapsulado pela mónade $IO$. Em contrapartida, $count$ espera um $String$ como argumento, não um tipo construtor $m$.
 
+\bigskip
+
 \begin{lstlisting}[caption={Funções de E/S~\cite{hughes2005programming, hask2001prelude}}, label={lst:func-io}]
 readFile :: FilePath -> IO String
 \end{lstlisting}
@@ -705,6 +707,8 @@ Na declaração de $Arrow$ na Listagem~\ref{lst:java-arrow-interface}, a interfa
 
 Assim como $Monad$, subclasses de $Arrow$ devem utilizar seus construtores para incluir $B \rightarrow C$ em seus contextos. Além disso, o método $andThen$ define a composição de $Arrow$ por $A(B, D) = A(B, C) \circ A(C, D)$.
 
+\bigskip\bigskip\bigskip
+
 \begin{lstlisting}[caption = {Interface $Arrow$}, label = {lst:java-arrow-interface}]
 interface Arrow<A extends Kind<?, ?>, B, C> {
 	<D, AD extends Kind<D, ?>> Arrow<AD, B, D> andThen(Arrow<AD, C, D> k);
@@ -715,6 +719,8 @@ A Listagem~\ref{lst:java-wrong-kleisli-instance} declara a classe $Kleisli$. Est
 
 
 Como $Kleisli$ trabalha com tipos monádicos, seu primeiro parâmetro de tipo impõe uma ligação entre $M$ e $Monad$. O tipo genérico $A$ define a entrada da função encapsulada pelo construtor de classe e $B$ o valor encapsulado pela mónade $M$. Além disso, os tipos genéricos declarados em $Kleisli$ são repassados para $Arrow$ e consequentemente formam os tipos de entrada e saída dos métodos sobrescritos.
+
+\bigskip\bigskip\bigskip
 
 \begin{lstlisting}[caption = {Implementação concreta da interface $Arrow$}, label = {lst:java-wrong-kleisli-instance}]
 public class Kleisli<M extends Monad<B, ?>, A, B> implements Arrow<M, A, B> {
@@ -812,7 +818,14 @@ Em ambos estudos as estruturas implementadas não estendem um contrato genérico
 
 \section{CONCLUSÃO}
 \label{sec:conc}
+
 Este trabalho demonstrou a construção da interface monádica, instância de flecha  $Kleisli$ e a garantia de coesão dada pelos axiomas destas estruturas. Diferentemente de linguagens funcionais, tipos construtores não são suportados em Java e foram simulados a partir da interface $Kind$. Além disso, outras limitações de tipos genéricos e herança impossibilitaram a construção de uma interface para flecha.
+
+Apesar de demonstrar a implementação apenas para o tratamento de nulidade, mónades podem de fato servir como abstrações para concorrência. Uma implementação concreta da interface mónade pode encapsular funções e executa-las em um contexto contendo threads. Desta forma, o pacote de concorrência disponível em Java pode abstrair funções de baixo nível e trabalhar com uma interface genérica que facilite a construção de programas concorrentes.
+
+Em ambientes distribuídos, muitas das vezes, faz-se necessário compartilhar valores entre diferentes máquinas. Outra importante implementação desta interface são as mónades de leitura e escrita. De forma similar a mónade de concorrência, tais mónades encapsulam funções que trabalham com estes valores e abstraem a complexidade do ambiente contido nestas aplicações.
+
+Por meio do polimorfismo obtido na implementação deste contrato, $Kleisli$ consegue generalizar a composição de todas as subclassificações de mónade. Esta instância permite a execução de funções de forma sequencial em ambos contextos monádicos, respeitando seus axiomas e mantendo suas estruturas. Portanto, é possível encadear diferentes computações através de diferentes mónades.
 
 Dessa forma, incrementou-se o suporte ao paradigma funcional
 na plataforma Java. A composição destas construções tornaram-se polimórficas, expressadas pela instância $Kleisli$ e generalizadas pela interface $Monad$. Este mesmo polimorfismo também é oferecido para desenvolvedores que desejam criar bibliotecas, referenciando apenas interfaces padronizadas.
